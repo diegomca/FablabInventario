@@ -1,0 +1,14 @@
+.Login{
+    margin-block-start: 8vh;
+  text-align: center;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: grayscale;
+}
+
+body > div,
+body > div > div,
+body > div > div > .ui.grid {
+  height: 100%;
+}
