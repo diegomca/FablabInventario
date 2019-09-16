@@ -26,5 +26,5 @@ steps:
     git config user.name "Diego Monsalves"
     git checkout master
     git add --all
-    git push https://74df474597a84a6fb47b22eb9f47ff21efadd68f@github.com/diegomca//FablabInventario.git --force
+    git push https://74df474597a84a6fb47b22eb9f47ff21efadd68f@github.com/diegomca/FablabInventario.git --force
   displayName: 'Github'
