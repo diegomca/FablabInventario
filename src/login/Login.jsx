@@ -5,6 +5,7 @@ import BackgroundSlider from 'react-background-slider'
 import image1 from '../img/login/slide-img-1.jpg'
 import image2 from '../img/login/slide-img-2.jpg'
 import image3 from '../img/login/slide-img-3.png'
+import './Login.css'
 //import { Link } from 'react-router-dom'
 
 

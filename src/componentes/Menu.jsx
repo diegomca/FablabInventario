@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import { Icon } from 'semantic-ui-react'
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import "../App.css";
 
 export default class MenuExampleCompactVertical extends Component {
 
@@ -9,6 +10,7 @@ export default class MenuExampleCompactVertical extends Component {
   render() {
 
     return (
+        <div className="Menu">
       <SideNav
     onSelect={(selected) => {
         // Add your code here
@@ -58,7 +60,7 @@ export default class MenuExampleCompactVertical extends Component {
         </NavItem>   
      </SideNav.Nav>
 </SideNav>
-
+        </div>
     )
   }
 }
