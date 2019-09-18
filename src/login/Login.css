@@ -7,8 +7,3 @@ body {
   -moz-font-smoothing: grayscale;
 }
 
-body > div,
-body > div > div,
-body > div > div > .ui.grid {
-  height: 100%;
-}
