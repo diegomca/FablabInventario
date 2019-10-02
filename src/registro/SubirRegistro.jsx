@@ -16,10 +16,8 @@ export default class Tarjeta extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeDropdown = this.handleChangeDropdown.bind(this);
         this.fileChange = this.fileChange.bind(this);
-        this._showMessage = this._showMessage.bind(this);
 
         this.state = {
-            showMessage: false,
             accion: '',
             productos: {},
             encargado: '',
@@ -28,10 +26,6 @@ export default class Tarjeta extends React.Component {
         };
     }
 
-
-    _showMessage(bool) {
-        this.setState({ showMessage: bool })
-    }
 
     fileInputRef = React.createRef();
 
@@ -63,9 +57,7 @@ export default class Tarjeta extends React.Component {
                         </Grid.Column>
 
                         <Grid.Column>
-                            {/*<Button fluid onClick={this._showMessage} >Seleccionar producto </Button>*/}
-                            <Productselect/>
-
+                            <Productselect />
                         </Grid.Column>
 
                         <Grid.Column>

@@ -4,8 +4,8 @@ const paragraph = <Image src='https://react.semantic-ui.com/images/wireframe/sho
 
 class RegistroCard extends Component {
     constructor(props) {
-        super(props) //since we are extending class Table so we have to use super in order to override Component class constructor
-        this.state = { //state is by default an object
+        super(props) 
+        this.state = { 
             registros: [
                 { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '' },
                 { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '' },
@@ -27,7 +27,6 @@ class RegistroCard extends Component {
                         </Item.Meta>
                         <Item.Description>{paragraph}</Item.Description>
                         <Item.Extra>
-
                             <Label>Limited</Label>
                         </Item.Extra>
                     </Item.Content>
@@ -35,7 +34,6 @@ class RegistroCard extends Component {
             )
         })
     }
-
 
     render() {
         return (

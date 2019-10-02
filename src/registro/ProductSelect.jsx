@@ -6,18 +6,21 @@ class ProductoModal extends Component {
         super(props) //since we are extending class Table so we have to use super in order to override Component class constructor
         this.state = { //state is by default an object
             productos: [
-                { stock: 5, name: 'Arduino' },
-                { stock: 7, name: 'Impresora' },
-                { stock: 12, name: 'Sensor Ultrasonido' },
-                { stock: 32, name: 'Led Rojo' },
-                { stock: 50, name: 'Resistencias' },
-                { stock: 50, name: 'Resistencias' },
-                { stock: 50, name: 'Resistencias' },
-                { stock: 50, name: 'Resistencias' },
-                { stock: 50, name: 'Resistencias' },
-                { stock: 10, name: 'Protoboard' }],
-            showModal: false
-        }
+                { id: 0, stock: 5, name: 'Arduino' },
+                { id: 1, stock: 7, name: 'Impresora' },
+                { id: 2, stock: 12, name: 'Sensor Ultrasonido' },
+                { id: 3, stock: 32, name: 'Led Rojo' },
+                { id: 4, stock: 50, name: 'Resistencias' },
+                { id: 5, stock: 50, name: 'Resistencias' },
+                { id: 6, stock: 50, name: 'Resistencias' },
+                { id: 7, stock: 50, name: 'Resistencias' },
+                { id: 8, stock: 50, name: 'Resistencias' },
+                { id: 9, stock: 10, name: 'Protoboard' }],
+                id:'',
+                nombre:'',
+                cantidad: 0,
+            productoSelect: {}
+            }
     }
 
     renderTableData() {
