@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Button, Icon, Modal } from 'semantic-ui-react'
+import { Button, Modal } from 'semantic-ui-react'
 import SubirRegistro from "./SubirRegistro";
 
 const ModalExampleScrollingContent = () => (
@@ -14,7 +14,7 @@ const ModalExampleScrollingContent = () => (
         </Modal.Content>
         <Modal.Actions>
             <Button color="facebook">
-                Agregar  <Icon name=' add square' />
+                Agregar 
             </Button>
         </Modal.Actions>
     </Modal>
