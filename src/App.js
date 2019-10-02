@@ -6,8 +6,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Registro from './registro/Registro.jsx';
 import Productos from './productos/Productos.jsx';
 import Home from './home/Home.jsx';
-import Datos from './datos_predictivos/Datos'
-import Graficos from './graficos/Graficos'
+import Datos from './datos_predictivos/Datos.jsx'
+import Graficos from './graficos/Grafico.jsx'
 
 
 

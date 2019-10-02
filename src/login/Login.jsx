@@ -17,9 +17,9 @@ class Login extends React.Component {
         this.state = {
             username: '',
             password: '',
-            submitted: false,
+            //submitted: false,
             loading: false,
-            error: ''
+            //error: ''
         };
 
     }
@@ -40,7 +40,7 @@ class Login extends React.Component {
     }
 */
     render() {
-        const { username, password, submitted, error } = this.state;
+        const { username, password, /*submitted, error*/ } = this.state;
         return (
             <div>
                 <Barrasuperior />
