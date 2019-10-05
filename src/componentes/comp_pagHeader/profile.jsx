@@ -1,24 +1,34 @@
-import React from 'react'
+import React from 'react';
 import { Dropdown, Image } from 'semantic-ui-react'
 import perfil from '../../img/perfil.jpg'
 
-const trigger = (
-  <span>
-    <Image size="mini" avatar src={perfil} /> {'Administrador'}
-  </span>
-)
+function DropdownSecion() {
 
-const options = [
-  { key: 'sign-out', text: 'Cerrar Sesión', icon: 'sign out' },
-]
 
-const DropdownImageTriggerExample = () => (
-  <Dropdown
-    trigger={trigger}
-    options={options}
-    pointing='top left'
-    icon={null}
-  />
-)
+  const trigger = (
+    <span>
+      <Image size="mini" avatar src={perfil} /> {window.localStorage.getItem('user')}
+    </span>
+  )
+  const cerrarSesion = () => {
+    window.localStorage.clear();
+    window.location = '/login';
 
-export default DropdownImageTriggerExample
+  }
+
+  const options = [
+    { key: 'sign-out', text: 'Cerrar Sesión', icon: 'sign out' }
+  ]
+  return (
+    <div>
+      <Dropdown
+        trigger={trigger}
+        options={options}
+        pointing='top left'
+        icon={null}
+        onChange={e => cerrarSesion()}
+      />
+    </div>
+  );
+}
+export default DropdownSecion;

@@ -1,6 +1,5 @@
 import React,{Component} from 'react'
-import { Image, Item, Label, Pagination } from 'semantic-ui-react'
-const paragraph = <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+import { Item, /*Label,*/ Pagination } from 'semantic-ui-react'
 
 class RegistroCard extends Component {
     constructor(props) {
@@ -18,16 +17,20 @@ class RegistroCard extends Component {
             const { peticionTipo, encargado } = registro
             return (
                 <Item>
-                    <Item.Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
-
                     <Item.Content>
                         <Item.Header as='a'>{peticionTipo}</Item.Header>
                         <Item.Meta>
                             <span className='cinema'> {encargado} </span>
                         </Item.Meta>
-                        <Item.Description>{paragraph}</Item.Description>
+                        <Item.Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                            Quisque dolor sem, tincidunt et turpis in, finibus vehicula tellus. 
+                            Phasellus et mattis arcu, at scelerisque justo. Maecenas sed pharetra lectus. 
+                            Nam eget malesuada nisi. Fusce ante ligula, molestie venenatis placerat vitae, placerat eu orci. 
+                            Ut in lacus ullamcorper, bibendum justo dignissim, gravida ligula. 
+                            Aenean quam ante, accumsan a tortor et, scelerisque lacinia lectus. 
+                            </Item.Description>
                         <Item.Extra>
-                            <Label>Limited</Label>
+                            {/* <Label>Limited</Label> */}
                         </Item.Extra>
                     </Item.Content>
                 </Item>

@@ -1,83 +1,42 @@
-import React from 'react'
-import { Card, Input, Dropdown, Button, Grid, TextArea, Form } from 'semantic-ui-react'
+import React, { useState, useEffect } from 'react';
+import { Card, Dropdown, Grid } from 'semantic-ui-react'
 import Productselect from './ProductSelect'
 
-const options = [
-    { key: "1", text: "1", value: "1" },
-    { key: "2", text: "2", value: "2" },
-    { key: "3", text: "3", value: "3" },
-    { key: "4", text: "4", value: "4" },
-]
+function Crum() {
 
-export default class Tarjeta extends React.Component {
-    constructor(props) {
-        super(props);
+    const options = [
+        { key: "1", text: "Entrega de Productos", value: "1" },
+        { key: "2", text: "Devolución de Productos", value: "2" },
+        { key: "3", text: "Actualizar Stock", value: "3" },
+        { key: "4", text: "Agregar nuevo Producto", value: "4" },
+    ]
+    const [isEntrega, setEntrega] = useState(false);
+    const [isDevolucion, setIsDevolucion] = useState(false);
+    const [isActualizar, setIsActualizar] = useState(false);
+    const [isAgregar, setIsAgregar] = useState(false);
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleChangeDropdown = this.handleChangeDropdown.bind(this);
-        this.fileChange = this.fileChange.bind(this);
-
-        this.state = {
-            accion: '',
-            productos: {},
-            encargado: '',
-            detalle: '',
-            archivo: ''
-        };
+    const dropOption = (evt) => {
+        
+        alert(evt);
     }
 
-
-    fileInputRef = React.createRef();
-
-    fileChange(event) {
-        let files = event.target.files;
-        this.setState({ archivo: files[0] })
-    }
-
-    handleChangeDropdown(event, { value }) {
-        this.setState({ accion: value });
-    }
-
-    handleChange(event) {
-        const target = event.target;
-        const val = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({ [name]: val });
-    }
-
-    render() {
-        return (
+    return (
+        <div>
             <Card fluid>
-
                 <Card.Content>
                     <Grid columns="equal">
                         <Grid.Column>
-                            <Dropdown fluid selection options={options} placeholder='Add Users' onChange={this.handleChangeDropdown} />
-                        </Grid.Column>
-
-                        <Grid.Column>
-                            <Productselect />
-                        </Grid.Column>
-
-                        <Grid.Column>
-                            <Input fluid name="encargado" placeholder="Encargado de actividad..." value={this.state.value} onChange={this.handleChange} />
-                        </Grid.Column>
-
-                        <Grid.Column width={1}>
-                            <Button icon="upload" onClick={() => this.fileInputRef.current.click()} />
-                            <input ref={this.fileInputRef} type="file" hidden onChange={this.fileChange} />
+                            <Dropdown fluid selection options={options} 
+                            placeholder='Eligir Acción'
+                            // onChange={e => dropOption(e.target.options)} 
+                            />
                         </Grid.Column>
                     </Grid>
                 </Card.Content>
-
-
-                <Card.Content extra>
-                    <Form>
-                        <TextArea name="detalle" placeholder='Detalle de la actividad' value={this.state.value} onChange={this.handleChange} />
-                    </Form>
-                </Card.Content>
             </Card>
-        )
-    }
+
+        </div>
+    );
 }
+
+export default Crum;

@@ -12,11 +12,7 @@ const ModalExampleScrollingContent = () => (
                 <SubirRegistro/>
             </Modal.Description>
         </Modal.Content>
-        <Modal.Actions>
-            <Button color="facebook">
-                Agregar 
-            </Button>
-        </Modal.Actions>
+
     </Modal>
 
 )

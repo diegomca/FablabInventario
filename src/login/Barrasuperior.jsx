@@ -14,11 +14,6 @@ const Barrasuperior = () => {
                             circular
                         />
                     </Menu.Item>
-                    <Menu.Menu position="right">
-                        <Menu.Item as="a" name="login">
-                            Login
-                    </Menu.Item>
-                    </Menu.Menu>
                 </Container>
             </Menu>
         </div>
