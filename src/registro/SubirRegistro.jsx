@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Dropdown, Grid } from 'semantic-ui-react'
+import { Card, Dropdown, Grid, Select } from 'semantic-ui-react'
 import Productselect from './ProductSelect'
+
 
 function Crum() {
 
@@ -14,11 +15,15 @@ function Crum() {
     const [isDevolucion, setIsDevolucion] = useState(false);
     const [isActualizar, setIsActualizar] = useState(false);
     const [isAgregar, setIsAgregar] = useState(false);
+    const [selectedOption, setValue] = useState('wea');
 
-    const dropOption = (evt) => {
-        
-        alert(evt);
-    }
+    useEffect(() => {       
+    });
+
+    const handleChange = selectedOption => {
+        console.log(`Option selected:`, selectedOption);
+    };
+
 
     return (
         <div>
@@ -26,10 +31,12 @@ function Crum() {
                 <Card.Content>
                     <Grid columns="equal">
                         <Grid.Column>
-                            <Dropdown fluid selection options={options} 
-                            placeholder='Eligir Acción'
-                            // onChange={e => dropOption(e.target.options)} 
-                            />
+                            <Select
+                                fluid options={options}
+                                placeholder='Eligir Acción'
+                                onChange={e => handleChange(e)}
+                            >
+                            </Select>
                         </Grid.Column>
                     </Grid>
                 </Card.Content>
