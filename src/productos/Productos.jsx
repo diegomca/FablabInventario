@@ -1,18 +1,14 @@
 import _ from 'lodash'
+import axios from 'axios'
+
 import React, { Component, Fragment } from 'react'
-import { Table,  Header, Container } from 'semantic-ui-react'
+import { Table, Menu, Icon, Header, Container } from 'semantic-ui-react'
 import './Productos.css'
 
 import Menus from '../componentes/Menu'
 import Headertop from '../componentes/pagHeader'
+import {getProductos} from './ListFunctions'
 
-
-const datosTabla = [
-  { codigo: 1, producto: 'Arduino', cantidad: 15, stock: 20, ubicacion: 'A1' },
-  { codigo: 2, producto: 'Cable', cantidad: 40, stock: 20, ubicacion: 'A1' },
-  { codigo: 3, producto: 'Arduino UNO', cantidad: 25, stock: 20, ubicacion: 'B4' },
-  { codigo: 4, producto: 'LED Rojo', cantidad: 70, stock: 20, ubicacion: 'Z3' },
-]
 
 class Productos extends Component {
 
@@ -20,9 +16,28 @@ class Productos extends Component {
     super(props)
     this.state = {
       column: null,
-      data: datosTabla,
+      data: null,
       direction: null,
     }
+  }
+
+ componentDidMount() {
+
+   this.getAll()
+
+ }
+
+  getAll = () =>{
+    getProductos().then(items => {
+      this.setState(
+        {
+          data: [...items]
+        },
+        () =>{
+          console.log(this.state.data)
+        }
+      )
+    })
   }
 
   handleSort = (clickedColumn) => () => {
@@ -60,49 +75,87 @@ class Productos extends Component {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell
-                      sorted={column === 'codigo' ? direction : null}
-                      onClick={this.handleSort('codigo')}
+                      sorted={column === 'id' ? direction : null}
+                      onClick={this.handleSort('id')}
                     >
                       Codigo
-            </Table.HeaderCell>
-
+                    </Table.HeaderCell>
                     <Table.HeaderCell
-                      sorted={column === 'producto' ? direction : null}
-                      onClick={this.handleSort('producto')}
+                      sorted={column === 'nombre' ? direction : null}
+                      onClick={this.handleSort('nombre')}
                     >
                       Producto
-            </Table.HeaderCell>
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                      sorted={column === 'oc' ? direction : null}
+                      onClick={this.handleSort('oc')}
+                    >
+                      Cantidad
+                    </Table.HeaderCell>
                     <Table.HeaderCell
                       sorted={column === 'cantidad' ? direction : null}
                       onClick={this.handleSort('cantidad')}
                     >
-                      Cantidad
-            </Table.HeaderCell>
-                    <Table.HeaderCell
-                      sorted={column === 'stock' ? direction : null}
-                      onClick={this.handleSort('stock')}
-                    >
                       Stock
-            </Table.HeaderCell>
+                    </Table.HeaderCell>
                     <Table.HeaderCell
-                      sorted={column === 'ubicacion' ? direction : null}
-                      onClick={this.handleSort('ubicacion')}
+                      sorted={column === 'location_id' ? direction : null}
+                      onClick={this.handleSort('location_id')}
                     >
                       Ubicacion
-            </Table.HeaderCell>
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                      sorted={column === 'descripcion' ? direction : null}
+                      onClick={this.handleSort('descripcion')}
+                    >
+                      Descripcion
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                      sorted={column === 'factura' ? direction : null}
+                      onClick={this.handleSort('factura')}
+                    >
+                      Factura
+                    </Table.HeaderCell>
+                    <Table.HeaderCell
+                      sorted={column === 'foto' ? direction : null}
+                      onClick={this.handleSort('foto')}
+                    >
+                      Fotografia
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {_.map(data, ({ producto, cantidad, stock, ubicacion, codigo }) => (
-                    <Table.Row key={codigo}>
-                      <Table.Cell>{codigo}</Table.Cell>
-                      <Table.Cell>{producto}</Table.Cell>
+                  {_.map(data, ({ nombre, oc,cantidad, location_id, descripcion, factura,foto, id }) => (
+                    <Table.Row key={id}>
+                      <Table.Cell>{id}</Table.Cell>
+                      <Table.Cell>{nombre}</Table.Cell>
+                      <Table.Cell>{oc}</Table.Cell>
                       <Table.Cell>{cantidad}</Table.Cell>
-                      <Table.Cell>{stock}</Table.Cell>
-                      <Table.Cell>{ubicacion}</Table.Cell>
+                      <Table.Cell>{location_id}</Table.Cell>
+                      <Table.Cell>{descripcion}</Table.Cell>
+                      <Table.Cell>{factura}</Table.Cell>
+                      <Table.Cell>{foto}</Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
+                <Table.Footer fullWidth >
+                  <Table.Row >
+                    <Table.HeaderCell colSpan='8'>
+                      <Menu floated='right' pagination >
+                        <Menu.Item as='a' icon>
+                          <Icon name='chevron left' />
+                        </Menu.Item>
+                        <Menu.Item as='a'>1</Menu.Item>
+                        <Menu.Item as='a'>2</Menu.Item>
+                        <Menu.Item as='a'>3</Menu.Item>
+                        <Menu.Item as='a'>4</Menu.Item>
+                        <Menu.Item as='a' icon>
+                          <Icon name='chevron right' />
+                        </Menu.Item>
+                      </Menu>
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Footer>
               </Table>
             </div>
           </Container>

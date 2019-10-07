@@ -8,12 +8,10 @@ import image3 from '../img/login/slide-img-3.png'
 import axios from 'axios';
 import './Login.css'
 
-
 //Sincere@april.biz
 //Bret
 function Login() {
 
-    axios.defaults.headers.Authorization = 'Bearer ' + localStorage.getItem('token')
     const [usersApi, setUsersApi] = useState("");
     const [userNick, setUserNick] = useState("");
     const [userPassword, setUserPassword] = useState("");
@@ -23,23 +21,22 @@ function Login() {
     var bandera = false;
     //const [hasError, setErrors] = useState(false)
 
-    const getAuth = () => {
-        return (
-            axios
-                .post(`/api/v1/admin/login`,
-                    { correo: userNick, password: userPassword })
-                .then(response => {
-                    window.localStorage.setItem('token', response.data.token)
-                    bandera = true;
-                    window.localStorage.setItem('user', response.data.usuario)
-                    window.location = '/home'
-                })/*.catch(          
-                if (!bandera) {
-                    setError(true);
-                    console.log('error');
-                    setUserPassword('');
-            })*/ )
-    }
+    useEffect(() => {
+
+
+
+
+        
+
+        async function fetchData() {
+            const res = await fetch("https://jsonplaceholder.typicode.com/users");
+            res
+                .json()
+                .then(res => setUsersApi(res))/*
+                .catch(err => setErrors(err))*/;
+        }
+        fetchData();
+    });
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -47,23 +44,35 @@ function Login() {
             setError(false);
             if (userNick === '') {
                 setErrorUser(true);
-            } else {
+            }else{
                 setErrorUser(false);
             }
             if (userPassword === '') {
                 setErrorPassport(true);
 
-            } else {
+            }else{
                 setErrorPassport(false);
             }
         } else {
             setErrorUser(false);
             setErrorPassport(false);
-            getAuth();
-
-
+            for (let contador = 0; contador < usersApi.length; contador++) {
+                if (userNick === usersApi[contador].email && userPassword === usersApi[contador].username) {
+                    console.log('logeado');
+                    window.localStorage.setItem('token', '2132434knfaskjdafnalenjgralejvnafjvk');
+                    window.localStorage.setItem('user', [usersApi[contador].name])
+                    window.location = '/home';
+                    bandera = true;
+                } 
+            }
+            if (!bandera) {
+                setError(true);
+                console.log('error');
+                setUserPassword('');
+            }
         }
     }
+    
 
     return (
         <div>
