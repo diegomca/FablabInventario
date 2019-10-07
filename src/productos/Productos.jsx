@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
-import { Table, Menu, Icon, Header, Container } from 'semantic-ui-react'
+import { Table,  Header, Container } from 'semantic-ui-react'
 import './Productos.css'
 
 import Menus from '../componentes/Menu'
@@ -103,24 +103,6 @@ class Productos extends Component {
                     </Table.Row>
                   ))}
                 </Table.Body>
-                <Table.Footer fullWidth >
-                  <Table.Row >
-                    <Table.HeaderCell colSpan='5'>
-                      <Menu floated='right' pagination >
-                        <Menu.Item as='a' icon>
-                          <Icon name='chevron left' />
-                        </Menu.Item>
-                        <Menu.Item as='a'>1</Menu.Item>
-                        <Menu.Item as='a'>2</Menu.Item>
-                        <Menu.Item as='a'>3</Menu.Item>
-                        <Menu.Item as='a'>4</Menu.Item>
-                        <Menu.Item as='a' icon>
-                          <Icon name='chevron right' />
-                        </Menu.Item>
-                      </Menu>
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Footer>
               </Table>
             </div>
           </Container>

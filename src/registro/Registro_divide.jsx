@@ -1,62 +1,46 @@
-import React,{Component} from 'react'
-import { Item, /*Label,*/ Pagination } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Item, Pagination } from 'semantic-ui-react'
+import ListaRegistro from './opciones/ListarRegistros'
+function RegistroCard() {
 
-class RegistroCard extends Component {
-    constructor(props) {
-        super(props) 
-        this.state = { 
-            registros: [
-                { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '' },
-                { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '' },
-                { peticionTipo: 'Nuevo Stock', encargado: 'Hernan Merino Correa', archivos: '', listaProductos: '', descripcion: '' }            ],
-        }
-    }
+    const [registros/*, setRegistros*/] = useState([
+        { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { peticionTipo: 'Nuevo Stock', encargado: 'Hernan Merino Correa', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' }]
+    );
+    const [paginaActual,setPaginaActual] = useState(1);
+    const postporPagina = 2;
 
-    postRegistros() {
-        return this.state.registros.map((registro, index) => {
-            const { peticionTipo, encargado } = registro
-            return (
-                <Item>
-                    <Item.Content>
-                        <Item.Header as='a'>{peticionTipo}</Item.Header>
-                        <Item.Meta>
-                            <span className='cinema'> {encargado} </span>
-                        </Item.Meta>
-                        <Item.Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Quisque dolor sem, tincidunt et turpis in, finibus vehicula tellus. 
-                            Phasellus et mattis arcu, at scelerisque justo. Maecenas sed pharetra lectus. 
-                            Nam eget malesuada nisi. Fusce ante ligula, molestie venenatis placerat vitae, placerat eu orci. 
-                            Ut in lacus ullamcorper, bibendum justo dignissim, gravida ligula. 
-                            Aenean quam ante, accumsan a tortor et, scelerisque lacinia lectus. 
-                            </Item.Description>
-                        <Item.Extra>
-                            {/* <Label>Limited</Label> */}
-                        </Item.Extra>
-                    </Item.Content>
-                </Item>
-            )
-        })
-    }
+    const indiceUltimoPost = postporPagina * paginaActual;
+    const indicePrimerPost = indiceUltimoPost - postporPagina;
+    const publicacionActual = registros.slice(indicePrimerPost,indiceUltimoPost)
 
-    render() {
-        return (
-            <div>
-                <Item.Group divided>
-                    {this.postRegistros()}
+    const cambiarPagina = (e, pageInfo) => {
+        setPaginaActual(pageInfo.activePage);};
+    
+    
 
-                </Item.Group>
-                {/*https://www.youtube.com/watch?v=IYCa1F-OWmk  hacer la paginacion */}
-                <Pagination
-                    defaultActivePage={1}
-                    firstItem={null}
-                    lastItem={null}
-                    pointing
-                    secondary
-                    totalPages={3}
+    return (
+        <div>
+            <Item.Group divided>
+                <ListaRegistro registros={publicacionActual} />
+            </Item.Group>
+
+            {/*https://www.youtube.com/watch?v=IYCa1F-OWmk  hacer la paginacion */}
+            <Pagination
+                defaultActivePage={1}
+                activePage={paginaActual}
+                firstItem={null}
+                lastItem={null}
+                pointing
+                secondary
+                totalPages={registros.length/postporPagina}
+                onPageChange={cambiarPagina}
                 />
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default RegistroCard
