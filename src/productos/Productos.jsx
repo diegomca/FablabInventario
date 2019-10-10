@@ -87,12 +87,6 @@ class Productos extends Component {
                       Producto
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                      sorted={column === 'oc' ? direction : null}
-                      onClick={this.handleSort('oc')}
-                    >
-                      Cantidad
-                    </Table.HeaderCell>
-                    <Table.HeaderCell
                       sorted={column === 'cantidad' ? direction : null}
                       onClick={this.handleSort('cantidad')}
                     >
@@ -111,36 +105,28 @@ class Productos extends Component {
                       Descripcion
                     </Table.HeaderCell>
                     <Table.HeaderCell
-                      sorted={column === 'factura' ? direction : null}
-                      onClick={this.handleSort('factura')}
+                      sorted={column === 'num_uv' ? direction : null}
+                      onClick={this.handleSort('num_uv')}
                     >
-                      Factura
-                    </Table.HeaderCell>
-                    <Table.HeaderCell
-                      sorted={column === 'foto' ? direction : null}
-                      onClick={this.handleSort('foto')}
-                    >
-                      Fotografia
+                      Numero UV
                     </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {_.map(data, ({ nombre, oc,cantidad, location_id, descripcion, factura,foto, id }) => (
+                  {_.map(data, ({ nombre, oc,cantidad, location_id, descripcion, num_uv, id }) => (
                     <Table.Row key={id}>
                       <Table.Cell>{id}</Table.Cell>
                       <Table.Cell>{nombre}</Table.Cell>
-                      <Table.Cell>{oc}</Table.Cell>
                       <Table.Cell>{cantidad}</Table.Cell>
                       <Table.Cell>{location_id}</Table.Cell>
                       <Table.Cell>{descripcion}</Table.Cell>
-                      <Table.Cell>{factura}</Table.Cell>
-                      <Table.Cell>{foto}</Table.Cell>
+                      <Table.Cell>{num_uv}</Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
                 <Table.Footer fullWidth >
                   <Table.Row >
-                    <Table.HeaderCell colSpan='8'>
+                    <Table.HeaderCell colSpan='6'>
                       <Menu floated='right' pagination >
                         <Menu.Item as='a' icon>
                           <Icon name='chevron left' />
