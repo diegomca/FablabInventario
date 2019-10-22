@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Grid, Header, Segment, Message } from 'semantic-ui-react';
 import Barrasuperior from './Barrasuperior'
 import BackgroundSlider from 'react-background-slider'
@@ -24,21 +24,27 @@ function Login() {
     //const [hasError, setErrors] = useState(false)
 
     const getAuth = () => {
-        return (
-            axios
-                .post(`/api/v1/admin/login`,
-                    { correo: userNick, password: userPassword })
-                .then(response => {
-                    window.localStorage.setItem('token', response.data.token)
-                    bandera = true;
-                    window.localStorage.setItem('user', response.data.usuario)
-                    window.location = '/home'
-                })/*.catch(          
-                if (!bandera) {
-                    setError(true);
-                    console.log('error');
-                    setUserPassword('');
-            })*/ )
+
+            window.localStorage.setItem('token', 'qeeqweewqewqw')
+                bandera = true;
+                window.localStorage.setItem('user', "temporal")
+                window.location = '/home'
+
+
+        // return (
+        //     axios
+        //         .post(`/api/v1/admin/login`,
+        //             { correo: userNick, password: userPassword })
+        //         .then(response => {
+        //             window.localStorage.setItem('token', response.data.token)
+        //             bandera = true;
+        //             window.localStorage.setItem('user', response.data.usuario)
+        //             window.location = '/home'
+        //         }).catch((err) => {
+        //             setError(true);
+        //             console.log(err);
+        //             setUserPassword('');
+        //         }))
     }
 
     const handleSubmit = (evt) => {
@@ -73,6 +79,15 @@ function Login() {
                     duration={5} transition={2} />
                 <Grid textAlign="center" verticalAlign="middle">
                     <Grid.Column style={{ maxWidth: 400 }}>
+
+                    <Message positive >
+                        <Message.Header>
+                            Desabilitado Servidor
+                        </Message.Header>
+                        Para activarlo, comentar las lineas de Login.jsx del 28 al 31 y descomentar desde 34 al 47. 
+                        Para ingresar escribir cualquier wea xD
+                    </Message>
+
                         {errorCuenta ? <Message negative><Message.Header>Datos Incorrectos</Message.Header>
                             <p>Nombre de Usuario o contraseña son invalidas, Intente nuevamente</p>
                         </Message> : <div></div>}

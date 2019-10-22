@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import axios from 'axios'
 
 import React, { Component, Fragment } from 'react'
 import { Table, Menu, Icon, Header, Container } from 'semantic-ui-react'

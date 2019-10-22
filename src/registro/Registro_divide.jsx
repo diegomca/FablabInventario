@@ -4,11 +4,11 @@ import ListaRegistro from './opciones/ListarRegistros'
 function RegistroCard() {
 
     const [registros/*, setRegistros*/] = useState([
-        { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { peticionTipo: 'Nuevo Stock', encargado: 'Hernan Merino Correa', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' }]
+        { id: 0,  peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { id: 2, peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { id: 3, peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { id: 4, peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
+        { id: 5, peticionTipo: 'Nuevo Stock', encargado: 'Hernan Merino Correa', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' }]
     );
     const [paginaActual,setPaginaActual] = useState(1);
     const postporPagina = 2;
