@@ -2,7 +2,6 @@ import React from 'react'
 import { Menu, Image } from 'semantic-ui-react'
 import User from './comp_pagHeader/profile'
 import logo from '../img/Logo-Fablab.png';
-import Search from './comp_pagHeader/inputSearch'
 
 
 const PagHeader = () => (
@@ -13,9 +12,6 @@ const PagHeader = () => (
         </Menu.Item>
     </Menu.Menu>
     <Menu.Menu position="right">
-    <Menu.Item>
-          <Search/>
-      </Menu.Item>
       <Menu.Item>
           <User/>
       </Menu.Item>
