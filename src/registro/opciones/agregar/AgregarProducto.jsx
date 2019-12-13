@@ -4,15 +4,23 @@ import { Button, Form, Grid, Input, TextArea, Card } from 'semantic-ui-react';
 
 function DevolucionProducto() {
 
-    const [codigo, setCodigo] = useState('');
-    const [nombre, setNombre] = useState('');
+    const [codigoUV, setCodigoUV] = useState('');
+    const [numSerie, setNumSerie] = useState('');
+    const [marca, setMarca] = useState('');
+    const [modelo, setModelo] = useState('');
     const [stock, setStock] = useState('');
     const [ubicacion, setUbicacion] = useState('');
     const [detalle, setDetalle] = useState('');
      const [file, setFile] = useState('');
      const [nameFile, setNameFile] = useState('');
     const handleSubmit = (evt) => {
-        alert(`Codigo: ${codigo}\nnombre: ${nombre}\nstock: ${stock}\nubicacion: ${ubicacion}\nDetalle: ${detalle}\nFile: ${file.name}\n`)
+        alert(`Codigo UV: ${codigoUV}\n
+        Num Serie: ${numSerie}\n
+        Marca: ${marca}\n
+        Modelo: ${modelo}\n
+        stock: ${stock}\n
+        ubicacion: ${ubicacion}\n
+        Detalle: ${detalle}\nFile: ${file.name}\n`)
     }
     const fileInputRef = React.createRef();
 
@@ -24,20 +32,28 @@ function DevolucionProducto() {
     return (
         <Card fluid>
             <Card.Content>
-                <Grid columns="equal">
+                <Grid columns="two">
                     <Grid.Column>
-                        <Input placeholder="Codigo" fluid onChange={e => setCodigo(e.target.value)}></Input>
+                        <Input type="number" placeholder="Codigo UV" fluid onChange={e => setCodigoUV(e.target.value)}></Input>
                     </Grid.Column>
                     <Grid.Column>
-                        <Input placeholder="Nombre del Producto" fluid onChange={e => setNombre(e.target.value)} ></Input>
+                        <Input placeholder="Número de Serie" fluid onChange={e => setNumSerie(e.target.value)}></Input>
                     </Grid.Column>
                     <Grid.Column>
-                        <Input placeholder="Stock Total" fluid onChange={e => setStock(e.target.value)}></Input>
+                        <Input placeholder="Marca" fluid onChange={e => setMarca(e.target.value)} ></Input>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Input placeholder="Modelo" fluid onChange={e => setModelo(e.target.value)} ></Input>
+                    </Grid.Column>
+                </Grid>
+                <Grid columns="three">
+                    <Grid.Column>
+                        <Input type="number" placeholder="Stock Total" fluid onChange={e => setStock(e.target.value)}></Input>
                     </Grid.Column>
                     <Grid.Column>
                         <Input placeholder="Ubicación" fluid onChange={e => setUbicacion(e.target.value)} ></Input>
                     </Grid.Column>
-                    <Grid.Column width={1}>
+                    <Grid.Column >
                         <Button icon="upload" onClick={() => fileInputRef.current.click()} />
                         <input ref={fileInputRef} type="file" hidden onChange={getFile} />
                         {nameFile}
@@ -46,7 +62,7 @@ function DevolucionProducto() {
             </Card.Content>
             <Form>
                 <Card.Content extra>
-                    <TextArea name="detalle" placeholder='Detalle de la Compra' onChange={e => setDetalle(e.target.value)}/>
+                    <TextArea name="detalle" placeholder='Descripción del producto' onChange={e => setDetalle(e.target.value)}/>
                     <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
                         Agregar
                         </Button>

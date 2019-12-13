@@ -1,20 +1,44 @@
-import React, {Component} from 'react'
+import React from 'react'
 import { ResponsivePie } from '@nivo/pie'
 
-
-import data from './DataPie'
-import config from './ConfigPie'
-
 import '../Chart.css'
+function Grafico() {
 
-class Grafico extends Component {
-
-    render() {
         return (
-            <div class="chart" >            
+            <div  >            
                 <ResponsivePie
-                    data={data}
-                    margin={config.margin}
+                    data={[
+                        {
+                            "id": "css",
+                            "label": "css",
+                            "value": 302,
+                            "color": "hsl(235, 70%, 50%)"
+                        },
+                        {
+                            "id": "java",
+                            "label": "java",
+                            "value": 223,
+                            "color": "hsl(242, 70%, 50%)"
+                        },
+                        {
+                            "id": "scala",
+                            "label": "scala",
+                            "value": 225,
+                            "color": "hsl(209, 70%, 50%)"
+                        },
+                        {
+                            "id": "python",
+                            "label": "python",
+                            "value": 528,
+                            "color": "hsl(70, 70%, 50%)"
+                        },
+                        {
+                            "id": "haskell",
+                            "label": "haskell",
+                            "value": 544,
+                            "color": "hsl(7, 70%, 50%)"
+                        }
+                    ]}
                     innerRadius={0.5}
                     padAngle={0.7}
                     cornerRadius={3}
@@ -34,14 +58,11 @@ class Grafico extends Component {
                     animate={true}
                     motionStiffness={90}
                     motionDamping={15}
-                    defs = {config.defs}
-                    fill = {config.fill}
-                    legends = {config.legends}
+                
                     
                 />
             </div>
         )
     }
-}
 
 export default Grafico
