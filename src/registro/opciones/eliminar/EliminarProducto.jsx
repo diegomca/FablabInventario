@@ -1,26 +1,32 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Form, Grid, TextArea, Card, Table, Modal, Header, Icon } from 'semantic-ui-react';
 import Productselect from './ProductoEliminar'
 import { UserContext } from "../UseContext";
+import { getListaProducto, removeProducto, setRegistro } from '../../../firebase';
 
 function EliminarProducto() {
 
     const [productSelect, setProductSelect] = useState([]);
-    const [productos] = useState([
-        { id: 0, stock: 5, name: 'Arduino' },
-        { id: 1, stock: 7, name: 'Impresora' },
-        { id: 2, stock: 12, name: 'Sensor Ultrasonido' },
-        { id: 3, stock: 32, name: 'Led Rojo' },
-        { id: 4, stock: 50, name: 'Resistencias' },
-        { id: 37, stock: 50, name: 'Resistencias' },
-        { id: 8, stock: 50, name: 'Resistencias' },
-        { id: 9, stock: 10, name: 'Protoboard' }]);
+    const [productos, setProductos] = useState([])
+
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [descripcion, setDescripcion] = useState("");
     const [file, setFile] = useState('');
     const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
+
+    useEffect(() => {
+        (async function () {
+            try {
+                getListaProducto((response) => {
+                    setProductos(response);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        })();// eslint-disable-next-line
+    }, []);
 
     const fileInputRef = React.createRef();
 
@@ -36,8 +42,29 @@ function EliminarProducto() {
         }
     }
     const handleSubmit = (evt) => {
-        alert(`Archivo: ${file}\nDescripción: ${descripcion}`)
+
+        if (productSelect.length > 0) {
+            productSelect.map((productos) => {
+                console.log(productos.ruta)
+                removeProducto(productos.ruta)
+            })
+            var lista = [];
+            productSelect.map((wea) => {
+                lista.push({ marca: wea.marca, modelo: wea.modelo, stock: wea.stock })
+            })
+
+
+            let temp_subir = { encargado: "Administrador", peticion: "Producto removido", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            setRegistro(temp_subir, (resp) => {
+                if (resp) {
+                    window.location = '/registro'
+                }
+            })
+        } else {
+            console.log("error")
+        }
     }
+
     return (
         <UserContext.Provider value={providerValue}>
             <Card fluid>
@@ -55,16 +82,17 @@ function EliminarProducto() {
                                                 <Table celled>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell>Producto  </Table.HeaderCell>
+                                                            <Table.HeaderCell>Marca  </Table.HeaderCell>
+                                                            <Table.HeaderCell>Modelo  </Table.HeaderCell>
                                                             <Table.HeaderCell>Cantidad</Table.HeaderCell>
                                                             <Table.HeaderCell>Seleccionar</Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productos.map((producto, index) => {
-                                                            const { stock, name, id } = producto
+                                                            const { stock, marca, codigo, modelo, key } = producto
                                                             return (
-                                                                <Productselect key={id} name={name} stock={stock} id={id} ></Productselect>
+                                                                <Productselect key={index} marca={marca} stock={stock} id={codigo} modelo={modelo} ruta={key}></Productselect>
                                                             )
                                                         })}
                                                     </Table.Body>
@@ -86,16 +114,18 @@ function EliminarProducto() {
                                                 <Table singleLine>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell >Producto</Table.HeaderCell>
+                                                            <Table.HeaderCell >Marca</Table.HeaderCell>
+                                                            <Table.HeaderCell >Modelo</Table.HeaderCell>
                                                             <Table.HeaderCell textAlign='center'>Cantidad </Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productSelect.map((item, index) => {
-                                                            const { producto, stock } = item
+                                                            const { marca, modelo, stock } = item
                                                             return (
-                                                                <Table.Row>
-                                                                    <Table.Cell>{producto}</Table.Cell>
+                                                                <Table.Row key={index}>
+                                                                    <Table.Cell>{marca}</Table.Cell>
+                                                                    <Table.Cell>{modelo}</Table.Cell>
                                                                     <Table.Cell textAlign='center' >{stock}</Table.Cell>
                                                                 </Table.Row>
                                                             )

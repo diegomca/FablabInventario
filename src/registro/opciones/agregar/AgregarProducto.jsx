@@ -1,11 +1,11 @@
 import React, { useState, /*useEffect*/ }  from 'react';
 import { Button, Form, Grid, Input, TextArea, Card } from 'semantic-ui-react';
+import { setProducto, setRegistro } from '../../../firebase';
 
 
 function DevolucionProducto() {
 
-    const [codigoUV, setCodigoUV] = useState('');
-    const [numSerie, setNumSerie] = useState('');
+    const [codigo, setCodigoUV] = useState('');
     const [marca, setMarca] = useState('');
     const [modelo, setModelo] = useState('');
     const [stock, setStock] = useState('');
@@ -14,13 +14,32 @@ function DevolucionProducto() {
      const [file, setFile] = useState('');
      const [nameFile, setNameFile] = useState('');
     const handleSubmit = (evt) => {
-        alert(`Codigo UV: ${codigoUV}\n
-        Num Serie: ${numSerie}\n
-        Marca: ${marca}\n
-        Modelo: ${modelo}\n
-        stock: ${stock}\n
-        ubicacion: ${ubicacion}\n
-        Detalle: ${detalle}\nFile: ${file.name}\n`)
+
+        if (codigo !== '' && marca !== '' && modelo !== '' && stock !== '' && ubicacion !== '') {
+
+            let productSelect = { codigo: Number(codigo), disponible: Number(stock), stock: Number(stock), marca: marca, modelo: modelo, ubicacion: ubicacion }
+            let productSelectLista = [{ codigo: Number(codigo), stock: Number(stock), marca: marca, modelo: modelo, ubicacion: ubicacion }]
+            
+            setProducto(productSelect, (resp) =>{
+                if (resp) {
+                    let temp_subir = { encargado: "Administrador", peticion: "Nuevo producto", archivo: "archivo.qlio", lista: productSelectLista, fecha: Date.now(), comentario: detalle }
+
+                    setRegistro(temp_subir, (resp) => {
+                        if (resp) {
+                            window.location = '/registro'
+                        }
+                    })
+                }else{
+                    console.log("error")
+                }
+            })
+
+            
+        }else{
+            alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
+        }
+      
+        
     }
     const fileInputRef = React.createRef();
 
@@ -32,12 +51,9 @@ function DevolucionProducto() {
     return (
         <Card fluid>
             <Card.Content>
-                <Grid columns="two">
+                <Grid columns="three">
                     <Grid.Column>
-                        <Input type="number" placeholder="Codigo UV" fluid onChange={e => setCodigoUV(e.target.value)}></Input>
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Input placeholder="Número de Serie" fluid onChange={e => setNumSerie(e.target.value)}></Input>
+                        <Input type="number" placeholder="Codigo" fluid onChange={e => setCodigoUV(e.target.value)}></Input>
                     </Grid.Column>
                     <Grid.Column>
                         <Input placeholder="Marca" fluid onChange={e => setMarca(e.target.value)} ></Input>

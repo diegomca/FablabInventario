@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Button, Message, Table } from 'semantic-ui-react'
 import { UserContext } from '../UseContext';
 
-function ListaProductoEntrega({ name, stock, id }) {
+function ListaProductoEntrega({ marca, modelo, stock, id, ubicacion, ruta, total }) {
 
     const { productSelect, setProductSelect } = useContext(UserContext);
 
@@ -23,12 +23,11 @@ function ListaProductoEntrega({ name, stock, id }) {
                 setProductSelect(temp);
             }
             return 1;
-
         })
         setBanderaSelect(!banderaSelect)
     }
 
-    const validacion = (evt, articulo, id, stockDisponible) => {
+    const validacion = (evt, marca, modelo, id, stockDisponible) => {
 
         if (Number(evt) > Number(stockDisponible)) {
             setStockBanderaCero(true);
@@ -44,9 +43,9 @@ function ListaProductoEntrega({ name, stock, id }) {
         setStockBandera(true);
         setBanderaSelect(!banderaSelect);
         if (productSelect.length === 0) {
-            setProductSelect([{ id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([{ id: id, marca: marca, modelo: modelo, stock: stockDisponible, cantidad: evt, total: total, ubicacion: ubicacion, ruta: ruta }])
         } else {
-            setProductSelect([...productSelect, { id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([...productSelect, { id: id, marca: marca, modelo: modelo, stock: stockDisponible, cantidad: evt, total: total, ubicacion: ubicacion, ruta: ruta  }])
         }
 
     }
@@ -54,7 +53,8 @@ function ListaProductoEntrega({ name, stock, id }) {
 
     return (
         <Table.Row key={id}>
-            <Table.Cell textAlign="center">{name}</Table.Cell>
+            <Table.Cell textAlign="center">{marca}</Table.Cell>
+            <Table.Cell textAlign="center">{modelo}</Table.Cell>
             <Table.Cell textAlign="center">{stock}</Table.Cell>
             <Table.Cell textAlign="center">
                 {stockBandera ? <div /> : <Message negative size="mini">La cantidad es mayor al stock</Message>
@@ -65,7 +65,7 @@ function ListaProductoEntrega({ name, stock, id }) {
             </Table.Cell>
             <Table.Cell textAlign="center" >
                 {banderaSelect ?
-                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, name, id, stock); }} />
+                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, marca, modelo, id, stock); }} />
                     :
                     <Button circular color="red" icon='delete' onClick={e => { eliminar(id); }} />
                 }

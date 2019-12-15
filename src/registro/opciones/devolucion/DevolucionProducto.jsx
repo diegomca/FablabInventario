@@ -1,19 +1,13 @@
-import React, { useState, useMemo} from 'react';
+import React, { useState, useMemo, useEffect} from 'react';
 import { Button, Form, Grid, Input, TextArea, Card,Modal, Header,Table, Icon } from 'semantic-ui-react';
 import Productselect from './ListaProductoDevolucion'
 import { UserContext } from '../UseContext';
+import { getListaProducto, updateProducto, setRegistro } from '../../../firebase';
 
 function DevolucionProducto() {
     const [productSelect, setProductSelect] = useState([]);
-    const [productos] = useState([
-        { id: 0, stock: 5, name: 'Arduino' },
-        { id: 1, stock: 7, name: 'Impresora' },
-        { id: 2, stock: 12, name: 'Sensor Ultrasonido' },
-        { id: 3, stock: 32, name: 'Led Rojo' },
-        { id: 4, stock: 50, name: 'Resistencias' },
-        { id: 37, stock: 50, name: 'Resistencias' },
-        { id: 8, stock: 50, name: 'Resistencias' },
-        { id: 9, stock: 10, name: 'Protoboard' }]);
+
+    const [productos, setProductos] = useState([])
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [encargado, setEncargado] = useState("");
@@ -23,12 +17,47 @@ function DevolucionProducto() {
     const providerValue = useMemo(() => ({ productSelect, setProductSelect}), [productSelect, setProductSelect]);
     const fileInputRef = React.createRef();
 
+    useEffect(() => {
+        (async function () {
+            try {
+                getListaProducto((response) => {
+                    setProductos(response);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        })();// eslint-disable-next-line
+    }, []);
+
+
     const getFile = e => {
         setFile(e.target.files[0])
         setNameFile(e.target.files[0].name)
     }
     const handleSubmit = (evt) => {
-        alert(encargado+descripcion+file)
+        if (encargado !== "" && productSelect.length >= 1) {
+            productSelect.map((productos) => {
+                let disponible = Number(productos.disponible) + Number(productos.cantidad);
+                console.log(disponible)
+                console.log(productos.ruta)
+                updateProducto(productos.ruta, disponible)
+            })
+            var lista = []
+            productSelect.map((wea) => {
+                lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+            })
+
+            let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            
+            setRegistro(temp_subir, (resp) => {
+                if (resp) {
+                    window.location = '/registro'
+                }
+            })
+        } else {
+            alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
+        }
+
     }
     const confirmarPedido = (evt) => {
 
@@ -54,7 +83,8 @@ function DevolucionProducto() {
                                                 <Table celled>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell>Producto  </Table.HeaderCell>
+                                                            <Table.HeaderCell>Marca</Table.HeaderCell>
+                                                            <Table.HeaderCell>Modelo</Table.HeaderCell>
                                                             <Table.HeaderCell>Articulos Pendientes</Table.HeaderCell>
                                                             <Table.HeaderCell>Cantidad</Table.HeaderCell>
                                                             <Table.HeaderCell>Seleccionar</Table.HeaderCell>
@@ -62,9 +92,10 @@ function DevolucionProducto() {
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productos.map((producto, index) => {
-                                                            const { stock, name, id } = producto
+                                                            const { stock, marca, modelo, codigo, disponible, key } = producto
+                                                            let dev_stock = Number(stock) - Number(disponible)
                                                             return (
-                                                                <Productselect key={id} name={name} stock={stock} id={id} ></Productselect>
+                                                                <Productselect key={index} marca={marca} modelo={modelo} disponible={disponible} stock={dev_stock} id={codigo} ruta={key} ></Productselect>
                                                             )
                                                         })}
                                                     </Table.Body>
@@ -87,17 +118,19 @@ function DevolucionProducto() {
                                                 <Table singleLine>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell >Producto</Table.HeaderCell>
+                                                            <Table.HeaderCell >Marca</Table.HeaderCell>
+                                                            <Table.HeaderCell >Modelo</Table.HeaderCell>
                                                             <Table.HeaderCell textAlign='center'>Articulos Pendientes:</Table.HeaderCell>
                                                             <Table.HeaderCell textAlign='center'>Cantidad Entregada</Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                 {productSelect.map((item, index) => {
-                                                    const { producto, stock, cantidad } = item
+                                                    const { marca, modelo, stock, cantidad } = item
                                                     return (
                                                         <Table.Row>
-                                                            <Table.Cell>{producto}</Table.Cell>
+                                                            <Table.Cell>{marca}</Table.Cell>
+                                                            <Table.Cell>{modelo}</Table.Cell>
                                                             <Table.Cell textAlign='center' >{stock}</Table.Cell>
                                                             <Table.Cell textAlign='center' >{cantidad}</Table.Cell>
                                                         </Table.Row>

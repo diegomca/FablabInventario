@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 const SelectRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        window.localStorage.getItem('token')
+        window.localStorage.getItem('token_inventarioUV')
             ? <Redirect to={{ pathname: '/home', state: { from: props.location } }}/>
             : <Component {...props} />
     )} />

@@ -10,6 +10,7 @@
     "@trendmicro/react-sidenav": "^0.4.5",
     "axios": "^0.19.0",
     "faker": "^4.1.0",
+    "firebase": "^7.6.0",
     "react": "^16.9.0",
     "react-background-slider": "^1.2.0",
     "react-background-slideshow": "^1.0.4",

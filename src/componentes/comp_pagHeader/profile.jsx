@@ -7,7 +7,7 @@ function DropdownSecion() {
 
   const trigger = (
     <span>
-      <Image size="mini" avatar src={perfil} /> {window.localStorage.getItem('user')}
+      <Image size="mini" avatar src={perfil} /> {window.localStorage.getItem('user_inventarioUV')}
     </span>
   )
   const cerrarSesion = () => {

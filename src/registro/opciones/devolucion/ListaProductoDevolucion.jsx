@@ -2,14 +2,14 @@ import React, { useState, useContext } from 'react'
 import { Button, Message, Table } from 'semantic-ui-react'
 import { UserContext } from '../UseContext';
 
-function ListaDevolucion({ name, stock, id }) {
+function ListaDevolucion({ marca, modelo, stock, id, ruta , disponible}) {
 
     const { productSelect, setProductSelect } = useContext(UserContext);
 
     const [banderaSelect, setBanderaSelect] = useState(true);
     const [stockBandera, setStockBandera] = useState(true)
     const [stockBanderaCero, setStockBanderaCero] = useState(true)
-    const validacion = (evt, articulo, id, stockDisponible) => {
+    const validacion = (evt, marca,modelo, id, stockDisponible) => {
 
         if (Number(evt) > Number(stockDisponible)) {
             setStockBanderaCero(true);
@@ -25,9 +25,9 @@ function ListaDevolucion({ name, stock, id }) {
         setStockBandera(true);
         setBanderaSelect(!banderaSelect);
         if (productSelect.length === 0) {
-            setProductSelect([{ id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([{ id: id, marca: marca, modelo: modelo, stock: stockDisponible, cantidad: evt, ruta: ruta, disponible: disponible }])
         } else {
-            setProductSelect([...productSelect, { id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([...productSelect, { id: id, marca: marca, modelo: modelo, stock: stockDisponible, cantidad: evt, ruta: ruta, disponible: disponible }])
         }
 
     }
@@ -44,11 +44,8 @@ function ListaDevolucion({ name, stock, id }) {
                 setProductSelect(temp);
             }
             return 1;
-
         })
-
         setBanderaSelect(!banderaSelect)
-
     }
     const inputRef = React.createRef();
 
@@ -56,7 +53,8 @@ function ListaDevolucion({ name, stock, id }) {
     return (
 
         <Table.Row key={id}>
-            <Table.Cell textAlign="center">{name}</Table.Cell>
+            <Table.Cell textAlign="center">{marca}</Table.Cell>
+            <Table.Cell textAlign="center">{modelo}</Table.Cell>
             <Table.Cell textAlign="center">{stock}</Table.Cell>
             <Table.Cell textAlign="center">
                 {stockBandera ? <div /> : <Message negative size="mini">La cantidad es mayor a los articulos pendientes</Message>
@@ -67,7 +65,7 @@ function ListaDevolucion({ name, stock, id }) {
             </Table.Cell>
             <Table.Cell textAlign="center" >
                 {banderaSelect ?
-                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, name, id, stock); }} />
+                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, marca,modelo, id, stock); }} />
                     :
                     <Button circular color="red" icon='delete' onClick={e => { eliminar(id); }} />
                 }

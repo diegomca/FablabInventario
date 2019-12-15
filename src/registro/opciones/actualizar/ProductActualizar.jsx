@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Button, Message, Table } from 'semantic-ui-react'
 import { UserContext } from '../UseContext';
 
-function ListaActualizarStock({ name, stock, id }) {
+function ListaActualizarStock({ marca, modelo, stock, id, ruta, disponible }) {
 
     const { productSelect, setProductSelect } = useContext(UserContext);
 
@@ -36,16 +36,16 @@ function ListaActualizarStock({ name, stock, id }) {
         setStockBanderaCero(true);
         setBanderaSelect(!banderaSelect);
         if (productSelect.length === 0) {
-            setProductSelect([{ id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([{ id: id, marca: articulo, stock: stockDisponible, cantidad: evt, modelo: modelo, ruta: ruta, disponible: disponible }])
         } else {
-            setProductSelect([...productSelect, { id: id, producto: articulo, stock: stockDisponible, cantidad: evt }])
+            setProductSelect([...productSelect, { id: id, marca: articulo, stock: stockDisponible, cantidad: evt, modelo: modelo, ruta: ruta, disponible: disponible  }])
         }
     }
     const inputRef = React.createRef();
 
     return (
         <Table.Row key={id}>
-            <Table.Cell textAlign="center">{name}</Table.Cell>
+            <Table.Cell textAlign="center">{marca}</Table.Cell>
             <Table.Cell textAlign="center">{stock}</Table.Cell>
             <Table.Cell textAlign="center">
                 {
@@ -55,7 +55,7 @@ function ListaActualizarStock({ name, stock, id }) {
             </Table.Cell>
             <Table.Cell textAlign="center" >
                 {banderaSelect ?
-                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, name, id, stock); }} />
+                    <Button circular color="green" icon='add' onClick={e => { validacion(inputRef.current.value, marca, id, stock); }} />
                     :
                     <Button circular color="red" icon='delete' onClick={e => { eliminar(id); }} />
                 }

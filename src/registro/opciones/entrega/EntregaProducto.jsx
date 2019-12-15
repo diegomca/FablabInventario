@@ -1,20 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon } from 'semantic-ui-react';
 import Productselect from './ProductSelect'
 import { UserContext } from "../UseContext";
+import { getListaProducto, setRegistro, updateProducto } from '../../../firebase';
 
 function EntregaProducto() {
 
     const [productSelect, setProductSelect] = useState([]);
-    const [productos] = useState([
-        { id: 0, stock: 5, name: 'Arduino' },
-        { id: 1, stock: 7, name: 'Impresora' },
-        { id: 2, stock: 12, name: 'Sensor Ultrasonido' },
-        { id: 3, stock: 32, name: 'Led Rojo' },
-        { id: 4, stock: 50, name: 'Resistencias' },
-        { id: 37, stock: 50, name: 'Resistencias' },
-        { id: 8, stock: 50, name: 'Resistencias' },
-        { id: 9, stock: 10, name: 'Protoboard' }]);
+    const [productos, setProductos] = useState([])
+
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [encargado, setEncargado] = useState("");
@@ -23,6 +17,19 @@ function EntregaProducto() {
     const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
     const fileInputRef = React.createRef();
+
+
+        useEffect(() => {
+            (async function () {
+                try {
+                    getListaProducto((response) => {
+                        setProductos(response);
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            })();// eslint-disable-next-line
+        }, []);
 
     const getFile = e => {
         setFile(e.target.files[0])
@@ -36,7 +43,28 @@ function EntregaProducto() {
         }
     }
     const handleSubmit = (evt) => {
-        alert(`Encargado: ${encargado}\nArchivo: ${file}\nDescripción: ${descripcion}`)
+        if (encargado !== "" && productSelect.length >= 1) {
+            var temp_lista =""
+            productSelect.map((productos) => {
+                temp_lista = temp_lista + `Marca: ${productos.marca} Modelo: ${productos.modelo} Cantidad: ${productos.cantidad}` + <br></br>;
+                let disponible = Number(productos.stock) - Number(productos.cantidad);
+                updateProducto( productos.ruta, disponible)
+            })
+
+            var lista = [];
+            productSelect.map((wea) => {
+                lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+            })
+
+            let temp_subir = { encargado: encargado, peticion: "Entrega de producto", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+                setRegistro(temp_subir, (resp) => {
+                    if (resp) {
+                        window.location = '/registro'
+                    }
+                })
+        }else{
+            alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
+        }
     }
     
     return (
@@ -55,7 +83,8 @@ function EntregaProducto() {
                                                 <Table celled>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell>Producto  </Table.HeaderCell>
+                                                            <Table.HeaderCell>Marca </Table.HeaderCell>
+                                                            <Table.HeaderCell>Modelo </Table.HeaderCell>
                                                             <Table.HeaderCell>Articulos Disponibles</Table.HeaderCell>
                                                             <Table.HeaderCell>Cantidad</Table.HeaderCell>
                                                             <Table.HeaderCell>Seleccionar</Table.HeaderCell>
@@ -63,9 +92,9 @@ function EntregaProducto() {
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productos.map((producto, index) => {
-                                                            const { stock, name, id } = producto
+                                                            const { disponible, marca, modelo, codigo, ubicacion, stock, key } = producto
                                                             return (
-                                                                <Productselect key={id} name={name} stock={stock} id={id} ></Productselect>
+                                                                <Productselect key={index} ubicacion={ubicacion} total={stock} marca={marca} modelo={modelo} stock={disponible} id={codigo} ruta={key} ></Productselect>
                                                             )
                                                         })}
                                                     </Table.Body>
@@ -88,17 +117,19 @@ function EntregaProducto() {
                                                 <Table singleLine>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.HeaderCell >Producto</Table.HeaderCell>
+                                                            <Table.HeaderCell >Marca</Table.HeaderCell>
+                                                            <Table.HeaderCell >Modelo</Table.HeaderCell>
                                                             <Table.HeaderCell textAlign='center'>Disponibilidad</Table.HeaderCell>
                                                             <Table.HeaderCell textAlign='center'>Cantidad Pedida</Table.HeaderCell>
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productSelect.map((item, index) => {
-                                                            const { producto, stock, cantidad } = item
+                                                            const { marca, modelo, stock, cantidad } = item
                                                             return (
                                                                 <Table.Row>
-                                                                    <Table.Cell>{producto}</Table.Cell>
+                                                                    <Table.Cell>{marca}</Table.Cell>
+                                                                    <Table.Cell>{modelo}</Table.Cell>
                                                                     <Table.Cell textAlign='center' >{stock}</Table.Cell>
                                                                     <Table.Cell textAlign='center' >{cantidad}</Table.Cell>
                                                                 </Table.Row>
@@ -115,7 +146,7 @@ function EntregaProducto() {
                             }
                         </Grid.Column>
                         <Grid.Column>
-                            <Input fluid name="encargado" placeholder="Encargado de Devolucion" onChange={e => setEncargado(e.target.value)} />
+                            <Input fluid name="encargado" placeholder="Encargado" onChange={e => setEncargado(e.target.value)} />
                         </Grid.Column>
 
                         <Grid.Column width={1}>
@@ -127,7 +158,7 @@ function EntregaProducto() {
                 </Card.Content>
                 <Form>
                     <Card.Content extra>
-                        <TextArea name="detalle" placeholder='Detalle de la Devolucion' onChange={e => setDescripcion(e.target.value)} />
+                        <TextArea name="detalle" placeholder='Detalle' onChange={e => setDescripcion(e.target.value)} />
                         <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
                             Agregar
                         </Button>

@@ -5,46 +5,27 @@ import BackgroundSlider from 'react-background-slider'
 import image1 from '../img/login/slide-img-1.jpg'
 import image2 from '../img/login/slide-img-2.jpg'
 import image3 from '../img/login/slide-img-3.png'
-import axios from 'axios';
 import './Login.css'
+import { ingresarLogin } from '../firebase';
 
 
-//Sincere@april.biz
-//Bret
 function Login() {
 
-    axios.defaults.headers.Authorization = 'Bearer ' + localStorage.getItem('token')
-    const [usersApi, setUsersApi] = useState("");
     const [userNick, setUserNick] = useState("");
     const [userPassword, setUserPassword] = useState("");
     const [errorCuenta, setError] = useState(false);
     const [errorUser, setErrorUser] = useState(false);
     const [errorpassport, setErrorPassport] = useState(false);
-    var bandera = false;
-    //const [hasError, setErrors] = useState(false)
 
     const getAuth = () => {
 
-            window.localStorage.setItem('token', 'qeeqweewqewqw')
-                bandera = true;
-                window.localStorage.setItem('user', "temporal")
-                window.location = '/home'
-
-
-        // return (
-        //     axios
-        //         .post(`/api/v1/admin/login`,
-        //             { correo: userNick, password: userPassword })
-        //         .then(response => {
-        //             window.localStorage.setItem('token', response.data.token)
-        //             bandera = true;
-        //             window.localStorage.setItem('user', response.data.usuario)
-        //             window.location = '/home'
-        //         }).catch((err) => {
-        //             setError(true);
-        //             console.log(err);
-        //             setUserPassword('');
-        //         }))
+        ingresarLogin(userNick, userPassword, (resp) => {
+            if (!resp) {
+                setError(true);
+                console.log('error');
+                setUserPassword('');
+            }
+        })
     }
 
     const handleSubmit = (evt) => {
@@ -66,8 +47,6 @@ function Login() {
             setErrorUser(false);
             setErrorPassport(false);
             getAuth();
-
-
         }
     }
 
@@ -79,15 +58,6 @@ function Login() {
                     duration={5} transition={2} />
                 <Grid textAlign="center" verticalAlign="middle">
                     <Grid.Column style={{ maxWidth: 400 }}>
-
-                    <Message positive >
-                        <Message.Header>
-                            Desabilitado Servidor
-                        </Message.Header>
-                        Para activarlo, comentar las lineas de Login.jsx del 28 al 31 y descomentar desde 34 al 47. 
-                        Para ingresar escribir cualquier wea xD
-                    </Message>
-
                         {errorCuenta ? <Message negative><Message.Header>Datos Incorrectos</Message.Header>
                             <p>Nombre de Usuario o contraseña son invalidas, Intente nuevamente</p>
                         </Message> : <div></div>}

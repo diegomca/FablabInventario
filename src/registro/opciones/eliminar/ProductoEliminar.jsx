@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Button, Table } from 'semantic-ui-react'
 import { UserContext } from '../UseContext';
 
-function ListaEliminar({ name, stock, id }) {
+function ListaEliminar({ marca, stock, id, modelo, ruta }) {
 
     const { productSelect, setProductSelect } = useContext(UserContext);
 
@@ -30,19 +30,20 @@ function ListaEliminar({ name, stock, id }) {
 
         setBanderaSelect(!banderaSelect);
         if (productSelect.length === 0) {
-            setProductSelect([{ id: id, producto: articulo, stock: stockDisponible}])
+            setProductSelect([{ id: id, marca: articulo, modelo: modelo, stock: stockDisponible, ruta: ruta}])
         } else {
-            setProductSelect([...productSelect, { id: id, producto: articulo, stock: stockDisponible}])
+            setProductSelect([...productSelect, { id: id, marca: articulo, modelo: modelo, stock: stockDisponible, ruta: ruta}])
         }
     }
 
     return (
         <Table.Row key={id}>
-            <Table.Cell textAlign="center">{name}</Table.Cell>
+            <Table.Cell textAlign="center">{marca}</Table.Cell>
+            <Table.Cell textAlign="center">{modelo}</Table.Cell>
             <Table.Cell textAlign="center">{stock}</Table.Cell>
             <Table.Cell textAlign="center" >
                 {banderaSelect ?
-                    <Button circular color="green" icon='add' onClick={e => { validacion( name, id, stock); }} />
+                    <Button circular color="green" icon='add' onClick={e => { validacion( marca, id, stock); }} />
                     :
                     <Button circular color="red" icon='delete' onClick={e => { eliminar(id); }} />
                 }

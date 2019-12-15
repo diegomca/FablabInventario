@@ -13,29 +13,39 @@ import SelectRoute from './componentes/SelectRoute.jsx'
 function App() {
 
   return (
+
     <Router>
-      <Switch>
-        <PrivateRoute path="/registro" exact component={Registro} />
-        <PrivateRoute path="/home" exact component={Home} />
-        <PrivateRoute path="/graficos" exact component={Graficos} />
-        <PrivateRoute path="/datos" exact component={Datos} />
-        <PrivateRoute path="/productos" exact component={Productos} />
-        <PrivateRoute path="/" exact component={Home} />
-        <SelectRoute path="/login" exact component={Login} />
-
-
-
-
-        {/* <Route path="/login" exact component={Login} />
-        <Route path="/registro" exact component={Registro} />
-
-        <Route path="/home" exact component={Home} />
-        <Route path="/graficos" exact component={Graficos} />
-        <Route path="/datos" exact component={Datos} />
-
-        <Route path="/productos" exact component={Productos} />
-        <Route path="/" exact component={Home} /> */}
-      </Switch>
+      {window.localStorage.getItem('permisos_inventarioUV') === '0' &&
+        <Switch>
+          <PrivateRoute path="/registro" exact component={Registro} />
+          <PrivateRoute path="/home" exact component={Home} />
+          <PrivateRoute path="/graficos" exact component={Graficos} />
+          <PrivateRoute path="/datos" exact component={Datos} />
+          <PrivateRoute path="/productos" exact component={Productos} />
+          <PrivateRoute path="/" exact component={Home} />
+          <SelectRoute path="/login" exact component={Login} />
+        </Switch>
+      }
+      {window.localStorage.getItem('permisos_inventarioUV') === '1' &&
+        <Switch>
+          <PrivateRoute path="/registro" exact component={Registro} />
+          <PrivateRoute path="/home" exact component={Home} />
+          <PrivateRoute path="/productos" exact component={Productos} />
+          <PrivateRoute path="/" exact component={Home} />
+          <SelectRoute path="/login" exact component={Login} />
+        </Switch>
+      }
+      {window.localStorage.getItem('permisos_inventarioUV') === '2' &&
+        <Switch>
+          <PrivateRoute path="/home" exact component={Home} />
+          <PrivateRoute path="/productos" exact component={Productos} />
+          <PrivateRoute path="/" exact component={Home} />
+          <SelectRoute path="/login" exact component={Login} />
+        </Switch>
+      }
+        <Switch>
+          <SelectRoute path="/login" exact component={Login} />
+        </Switch>
     </Router>
   );
 }

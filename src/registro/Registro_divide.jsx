@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Item, Pagination } from 'semantic-ui-react'
 import ListaRegistro from './opciones/ListarRegistros'
+import { getListaRegistro } from '../firebase'
 function RegistroCard() {
+    
+    const [registros, setRegistros] = useState([])
 
-    const [registros/*, setRegistros*/] = useState([
-        { id: 0,  peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { id: 2, peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { id: 3, peticionTipo: 'Entrega de producto', encargado: 'Juanito Perez', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { id: 4, peticionTipo: 'Devolución de producto', encargado: 'Arturo Prat Chacon', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' },
-        { id: 5, peticionTipo: 'Nuevo Stock', encargado: 'Hernan Merino Correa', archivos: '', listaProductos: '', descripcion: '', fecha: 'Fecha' }]
-    );
+        useEffect(() => {
+            (async function () {
+                try {
+                    getListaRegistro((response) => {
+                        setRegistros(response);
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            })();// eslint-disable-next-line
+        }, []);
+
     const [paginaActual,setPaginaActual] = useState(1);
-    const postporPagina = 2;
+    const postporPagina = 3;
 
     const indiceUltimoPost = postporPagina * paginaActual;
     const indicePrimerPost = indiceUltimoPost - postporPagina;
@@ -28,7 +36,6 @@ function RegistroCard() {
                 <ListaRegistro registros={publicacionActual} />
             </Item.Group>
 
-            {/*https://www.youtube.com/watch?v=IYCa1F-OWmk  hacer la paginacion */}
             <Pagination
                 defaultActivePage={1}
                 activePage={paginaActual}
@@ -36,9 +43,12 @@ function RegistroCard() {
                 lastItem={null}
                 pointing
                 secondary
-                totalPages={registros.length/postporPagina}
+                totalPages={Number(registros.length/postporPagina)}
                 onPageChange={cambiarPagina}
                 />
+            <br></br>
+            <br></br>
+            <br></br>
         </div>
     )
 }

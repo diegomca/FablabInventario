@@ -1,26 +1,35 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Form, Grid, TextArea, Card, Table, Modal,Header, Icon } from 'semantic-ui-react';
 import Productselect from './ProductActualizar'
 import { UserContext } from "../UseContext";
+import { getListaProducto, updateProductoStock, setRegistro } from '../../../firebase';
 
 function ActualizarStock() {
 
     const [productSelect, setProductSelect] = useState([]);
-    const [productos] = useState([
-        { id: 0, stock: 5, name: 'Arduino' },
-        { id: 1, stock: 7, name: 'Impresora' },
-        { id: 2, stock: 12, name: 'Sensor Ultrasonido' },
-        { id: 3, stock: 32, name: 'Led Rojo' },
-        { id: 4, stock: 50, name: 'Resistencias' },
-        { id: 37, stock: 50, name: 'Resistencias' },
-        { id: 8, stock: 50, name: 'Resistencias' },
-        { id: 9, stock: 10, name: 'Protoboard' }]);
+    
+    const [productos, setProductos] = useState([])
+
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [descripcion, setDescripcion] = useState("");
     const [file, setFile] = useState('');
     const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
+
+    useEffect(() => {
+        (async function () {
+            try {
+                getListaProducto((response) => {
+                    setProductos(response);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        })();// eslint-disable-next-line
+    }, []);
+
+
 
     const fileInputRef = React.createRef();
 
@@ -36,7 +45,29 @@ function ActualizarStock() {
         }
     }
     const handleSubmit = (evt) => {
-        alert(`Archivo: ${file}\nDescripción: ${descripcion}`)
+
+        if (productSelect.length >= 1) {
+            productSelect.map((productos) => {
+                let new_stock = Number(productos.stock) + Number(productos.cantidad) 
+                let new_disponible = Number(productos.disponible) + Number(productos.cantidad)
+                console.log(new_disponible) 
+                console.log(new_stock) 
+                updateProductoStock(new_stock,new_disponible,productos.ruta)
+            })
+            var lista = []
+            productSelect.map((wea) => {
+                lista.push({marca: wea.marca , modelo: wea.modelo,cantidad: wea.cantidad,stock: wea.stock})
+            })
+            let temp_subir = { encargado: "Administrador", peticion: "Actualizar stock", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+
+            setRegistro(temp_subir, (resp) => {
+                if (resp) {
+                    window.location = '/registro'
+                }
+            })
+        } else {
+            alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
+        }    
     }
     return (
         <UserContext.Provider value={providerValue}>
@@ -63,9 +94,9 @@ function ActualizarStock() {
                                                     </Table.Header>
                                                     <Table.Body>
                                                         {productos.map((producto, index) => {
-                                                            const { stock, name, id } = producto
+                                                            const { stock, marca, modelo, codigo, key, disponible } = producto
                                                             return (
-                                                                <Productselect key={id} name={name} stock={stock} id={id} ></Productselect>
+                                                                <Productselect key={index} marca={marca} modelo={modelo} stock={stock} id={codigo} ruta={key}  disponible={disponible} ></Productselect>
                                                             )
                                                         })}
                                                     </Table.Body>
