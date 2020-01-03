@@ -18,13 +18,19 @@ function Crum() {
 
     return (
         <div>
-            {eleccion &&
+            {eleccion && window.localStorage.getItem('permisos_inventarioUV') === '0' &&
                 <Grid centered columns="equal">
                     <Button onClick={e => { setEleccion(!eleccion); setEntrega(!isEntrega) }} >Entrega de productos</Button>
                     <Button onClick={e => { setEleccion(!eleccion); setIsDevolucion(!isDevolucion) }} >Devolución de productos</Button>
                     <Button onClick={e => { setEleccion(!eleccion); setIsActualizar(!isActualizar) }} >Actualizar Stock</Button>
                     <Button onClick={e => { setEleccion(!eleccion); setIsAgregar(!isAgregar) }} >Agregar nuevo producto</Button>
                     <Button onClick={e => { setEleccion(!eleccion); setIsEliminar(!isEliminar) }} >Eliminar Producto</Button>
+                </Grid>
+            }
+            {eleccion && window.localStorage.getItem('permisos_inventarioUV') === '1' &&
+                <Grid centered columns="equal">
+                    <Button onClick={e => { setEleccion(!eleccion); setEntrega(!isEntrega) }} >Entrega de productos</Button>
+                    <Button onClick={e => { setEleccion(!eleccion); setIsDevolucion(!isDevolucion) }} >Devolución de productos</Button>
                 </Grid>
             }
             {isEntrega && <div>

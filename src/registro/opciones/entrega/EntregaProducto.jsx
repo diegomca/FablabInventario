@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon } from 'semantic-ui-react';
+import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon, Image } from 'semantic-ui-react';
 import Productselect from './ProductSelect'
 import { UserContext } from "../UseContext";
-import { getListaProducto, setRegistro, updateProducto } from '../../../firebase';
-
+import firebaseConf, { getListaProducto, setRegistro, updateProducto } from '../../../firebase';
+import firebase from 'firebase'
 function EntregaProducto() {
 
     const [productSelect, setProductSelect] = useState([]);
@@ -59,6 +59,8 @@ function EntregaProducto() {
             let temp_subir = { encargado: encargado, peticion: "Entrega de producto", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
                 setRegistro(temp_subir, (resp) => {
                     if (resp) {
+                        const storageRef = firebase.storage().ref(`${nameFile}`)
+                        storageRef.put(file)
                         window.location = '/registro'
                     }
                 })
@@ -152,7 +154,6 @@ function EntregaProducto() {
                         <Grid.Column width={1}>
                             <Button icon="upload" onClick={() => fileInputRef.current.click()} />
                             <input ref={fileInputRef} type="file" hidden onChange={getFile} />
-                            {nameFile}
                         </Grid.Column>
                     </Grid>
                 </Card.Content>

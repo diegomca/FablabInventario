@@ -10,6 +10,7 @@ import Datos from './datos_predictivos/Datos.jsx'
 import Graficos from './graficos/Grafico.jsx'
 import PrivateRoute from './componentes/PrivateRoute.jsx'
 import SelectRoute from './componentes/SelectRoute.jsx'
+import Error404 from './componentes/Error404.jsx';
 function App() {
 
   return (
@@ -24,6 +25,8 @@ function App() {
           <PrivateRoute path="/productos" exact component={Productos} />
           <PrivateRoute path="/" exact component={Home} />
           <SelectRoute path="/login" exact component={Login} />
+          <PrivateRoute component={Error404} />
+
         </Switch>
       }
       {window.localStorage.getItem('permisos_inventarioUV') === '1' &&
@@ -33,6 +36,8 @@ function App() {
           <PrivateRoute path="/productos" exact component={Productos} />
           <PrivateRoute path="/" exact component={Home} />
           <SelectRoute path="/login" exact component={Login} />
+          <PrivateRoute component={Error404} />
+
         </Switch>
       }
       {window.localStorage.getItem('permisos_inventarioUV') === '2' &&
@@ -41,11 +46,17 @@ function App() {
           <PrivateRoute path="/productos" exact component={Productos} />
           <PrivateRoute path="/" exact component={Home} />
           <SelectRoute path="/login" exact component={Login} />
+          <PrivateRoute component={Error404} />
         </Switch>
       }
+      
+      {!window.localStorage.getItem('permisos_inventarioUV') &&
         <Switch>
-          <SelectRoute path="/login" exact component={Login} />
-        </Switch>
+        <SelectRoute path="/login" exact component={Login} />
+        <PrivateRoute path="/" exact component={Home} />
+        <PrivateRoute component={Error404} />
+      </Switch>
+      }
     </Router>
   );
 }
