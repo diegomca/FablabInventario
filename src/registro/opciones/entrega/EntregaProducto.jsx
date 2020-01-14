@@ -2,8 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon, Image } from 'semantic-ui-react';
 import Productselect from './ProductSelect'
 import { UserContext } from "../UseContext";
-import firebaseConf, { getListaProducto, setRegistro, updateProducto } from '../../../firebase';
-import firebase from 'firebase'
+import { getListaProducto, setRegistro, updateProducto, updateHistorica, setDatosGrafico } from '../../../firebase';
+
 function EntregaProducto() {
 
     const [productSelect, setProductSelect] = useState([]);
@@ -13,10 +13,7 @@ function EntregaProducto() {
     const [isClose, setIsclose] = useState(false);
     const [encargado, setEncargado] = useState("");
     const [descripcion, setDescripcion] = useState("");
-    const [file, setFile] = useState('');
-    const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
-    const fileInputRef = React.createRef();
 
 
         useEffect(() => {
@@ -31,10 +28,7 @@ function EntregaProducto() {
             })();// eslint-disable-next-line
         }, []);
 
-    const getFile = e => {
-        setFile(e.target.files[0])
-        setNameFile(e.target.files[0].name)
-    }
+
     const confirmarPedido = (evt) => {
 
         if (productSelect.length > 0) {
@@ -49,18 +43,20 @@ function EntregaProducto() {
                 temp_lista = temp_lista + `Marca: ${productos.marca} Modelo: ${productos.modelo} Cantidad: ${productos.cantidad}` + <br></br>;
                 let disponible = Number(productos.stock) - Number(productos.cantidad);
                 updateProducto( productos.ruta, disponible)
+                updateHistorica(productos.ruta, Number(productos.cantidad))
+                var temp_var = new Date() 
+                setDatosGrafico(productos.marca, productos.modelo, Number(productos.cantidad), temp_var.getFullYear(), temp_var.getMonth())
             })
 
             var lista = [];
             productSelect.map((wea) => {
                 lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
             })
-
-            let temp_subir = { encargado: encargado, peticion: "Entrega de producto", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            var fecha_date = new Date();
+            var ano = fecha_date.getFullYear();
+            let temp_subir = { encargado: encargado, peticion: "Entrega de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
                 setRegistro(temp_subir, (resp) => {
                     if (resp) {
-                        const storageRef = firebase.storage().ref(`${nameFile}`)
-                        storageRef.put(file)
                         window.location = '/registro'
                     }
                 })
@@ -149,11 +145,6 @@ function EntregaProducto() {
                         </Grid.Column>
                         <Grid.Column>
                             <Input fluid name="encargado" placeholder="Encargado" onChange={e => setEncargado(e.target.value)} />
-                        </Grid.Column>
-
-                        <Grid.Column width={1}>
-                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
-                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
                         </Grid.Column>
                     </Grid>
                 </Card.Content>

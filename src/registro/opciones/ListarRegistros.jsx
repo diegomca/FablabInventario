@@ -212,9 +212,6 @@ function ListarRegistros({ registros }) {
                     <Item.Description>
                         {comentario}
                     </Item.Description>
-                    <Item.Extra>
-                        <Button icon="file outline" ></Button>
-                    </Item.Extra>
                 </Item>
             </Segment>
         )

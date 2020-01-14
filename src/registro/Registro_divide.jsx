@@ -43,7 +43,7 @@ function RegistroCard() {
                 lastItem={null}
                 pointing
                 secondary
-                totalPages={Number(registros.length/postporPagina)}
+                totalPages={Math.ceil((registros.length/postporPagina))}
                 onPageChange={cambiarPagina}
                 />
             <br></br>

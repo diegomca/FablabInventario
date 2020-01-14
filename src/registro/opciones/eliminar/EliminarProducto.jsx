@@ -12,8 +12,7 @@ function EliminarProducto() {
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [descripcion, setDescripcion] = useState("");
-    const [file, setFile] = useState('');
-    const [nameFile, setNameFile] = useState('');
+
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
 
     useEffect(() => {
@@ -28,12 +27,6 @@ function EliminarProducto() {
         })();// eslint-disable-next-line
     }, []);
 
-    const fileInputRef = React.createRef();
-
-    const getFile = e => {
-        setFile(e.target.files[0])
-        setNameFile(e.target.files[0].name)
-    }
     const confirmarPedido = (evt) => {
 
         if (productSelect.length > 0) {
@@ -53,8 +46,9 @@ function EliminarProducto() {
                 lista.push({ marca: wea.marca, modelo: wea.modelo, stock: wea.stock })
             })
 
-
-            let temp_subir = { encargado: "Administrador", peticion: "Producto removido", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            var fecha_date = new Date();
+            var ano = fecha_date.getFullYear();
+            let temp_subir = { encargado: "Administrador", peticion: "Producto removido", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
             setRegistro(temp_subir, (resp) => {
                 if (resp) {
                     window.location = '/registro'
@@ -139,12 +133,6 @@ function EliminarProducto() {
                                     <Button onClick={e => { setIsShowingModal(!isShowingModal); setProductSelect([]); }} color="red" circular attached='right'>Eliminar Articulos</Button>
                                 </div>
                             }
-                        </Grid.Column>
-
-                        <Grid.Column width={1}>
-                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
-                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
-                            {nameFile}
                         </Grid.Column>
 
                     </Grid>

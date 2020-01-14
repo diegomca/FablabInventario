@@ -1,11 +1,7 @@
 .chart {
-    height:50vh;
+    height:60vh;
     width:60vw;
     background: white;
-    box-shadow: 0 4px 8px 0 rgba(red,green,blue,yellow);
     transition: 0.3s;
+        align-self: center;
    }
-
-   .chart:hover {
-    box-shadow: 0 8px 16px 0 rgba(red,green,blue,yellow);
-  }

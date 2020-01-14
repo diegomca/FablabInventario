@@ -12,10 +12,7 @@ function DevolucionProducto() {
     const [isClose, setIsclose] = useState(false);
     const [encargado, setEncargado] = useState("");
     const [descripcion, setDescripcion] = useState("");
-    const [file, setFile] = useState('');
-    const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect}), [productSelect, setProductSelect]);
-    const fileInputRef = React.createRef();
 
     useEffect(() => {
         (async function () {
@@ -30,10 +27,6 @@ function DevolucionProducto() {
     }, []);
 
 
-    const getFile = e => {
-        setFile(e.target.files[0])
-        setNameFile(e.target.files[0].name)
-    }
     const handleSubmit = (evt) => {
         if (encargado !== "" && productSelect.length >= 1) {
             productSelect.map((productos) => {
@@ -46,8 +39,9 @@ function DevolucionProducto() {
             productSelect.map((wea) => {
                 lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
             })
-
-            let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            var fecha_date = new Date();
+            var ano = fecha_date.getFullYear();
+            let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
             
             setRegistro(temp_subir, (resp) => {
                 if (resp) {
@@ -94,9 +88,11 @@ function DevolucionProducto() {
                                                         {productos.map((producto, index) => {
                                                             const { stock, marca, modelo, codigo, disponible, key } = producto
                                                             let dev_stock = Number(stock) - Number(disponible)
-                                                            return (
-                                                                <Productselect key={index} marca={marca} modelo={modelo} disponible={disponible} stock={dev_stock} id={codigo} ruta={key} ></Productselect>
-                                                            )
+                                                            if (dev_stock > 0) {
+                                                                return (
+                                                                    <Productselect key={index} marca={marca} modelo={modelo} disponible={disponible} stock={dev_stock} id={codigo} ruta={key} ></Productselect>
+                                                                )
+                                                            }
                                                         })}
                                                     </Table.Body>
                                                 </Table>
@@ -150,11 +146,6 @@ function DevolucionProducto() {
                         <Input fluid name="encargado" placeholder="Encargado de Devolucion" onChange={e => setEncargado(e.target.value)} />
                     </Grid.Column>
 
-                    <Grid.Column width={1}>
-                        <Button icon="upload" onClick={() => fileInputRef.current.click()} />
-                        <input ref={fileInputRef} type="file" hidden onChange={getFile} />
-                        {nameFile}
-                    </Grid.Column>
                 </Grid>
             </Card.Content>
             <Form>

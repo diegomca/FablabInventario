@@ -18,7 +18,7 @@ export default class Grafico extends Component {
                     <Headertop/>
                     <div className="MargenTitulo">
                         <div>
-                            <Header size="large" > JUAN Y LA MAQUINA DEL TIEMPO </Header>
+                            <Header size="large" > Sección de Gráficos </Header>
                             <div className="MargenGrafico">
                                 <Tab/>
                             </div>

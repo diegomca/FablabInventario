@@ -10,7 +10,7 @@ export default {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'transportation',
+        legend: 'Tipo de Registro',
         legendOffset: 36,
         legendPosition: 'middle'
     },
@@ -19,7 +19,7 @@ export default {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'count',
+        legend: 'Cantidad',
         legendOffset: -40,
         legendPosition: 'middle'
     },

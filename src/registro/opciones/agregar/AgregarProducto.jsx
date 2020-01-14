@@ -11,18 +11,19 @@ function DevolucionProducto() {
     const [stock, setStock] = useState('');
     const [ubicacion, setUbicacion] = useState('');
     const [detalle, setDetalle] = useState('');
-     const [file, setFile] = useState('');
-     const [nameFile, setNameFile] = useState('');
+
     const handleSubmit = (evt) => {
 
         if (codigo !== '' && marca !== '' && modelo !== '' && stock !== '' && ubicacion !== '') {
 
-            let productSelect = { codigo: Number(codigo), disponible: Number(stock), stock: Number(stock), marca: marca, modelo: modelo, ubicacion: ubicacion }
+            let productSelect = { codigo: Number(codigo), disponible: Number(stock), stock: Number(stock), marca: marca, modelo: modelo, ubicacion: ubicacion, historica_pedidos: 0 }
             let productSelectLista = [{ codigo: Number(codigo), stock: Number(stock), marca: marca, modelo: modelo, ubicacion: ubicacion }]
             
             setProducto(productSelect, (resp) =>{
                 if (resp) {
-                    let temp_subir = { encargado: "Administrador", peticion: "Nuevo producto", archivo: "archivo.qlio", lista: productSelectLista, fecha: Date.now(), comentario: detalle }
+                    var fecha_date = new Date();
+                    var ano = fecha_date.getFullYear();
+                    let temp_subir = { encargado: "Administrador", peticion: "Nuevo producto", lista: productSelectLista, fecha: Date.now(), comentario: detalle, año: ano, mes: fecha_date.getMonth() }
 
                     setRegistro(temp_subir, (resp) => {
                         if (resp) {
@@ -40,12 +41,6 @@ function DevolucionProducto() {
         }
       
         
-    }
-    const fileInputRef = React.createRef();
-
-    const getFile = e => {
-        setFile(e.target.files[0])
-        setNameFile(e.target.files[0].name)
     }
 
     return (
@@ -68,11 +63,6 @@ function DevolucionProducto() {
                     </Grid.Column>
                     <Grid.Column>
                         <Input placeholder="Ubicación" fluid onChange={e => setUbicacion(e.target.value)} ></Input>
-                    </Grid.Column>
-                    <Grid.Column >
-                        <Button icon="upload" onClick={() => fileInputRef.current.click()} />
-                        <input ref={fileInputRef} type="file" hidden onChange={getFile} />
-                        {nameFile}
                     </Grid.Column>
                 </Grid>
             </Card.Content>

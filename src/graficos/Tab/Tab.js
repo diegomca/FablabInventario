@@ -7,16 +7,17 @@ import GraficoPie from "../Pies/Pie";
 
 const panes = [
   {
-    menuItem: 'Tab 1',
-    render: () => <Tab.Pane attached={false}> <GraficoBar/> </Tab.Pane>,
+    menuItem: 'Tipos de Registros',
+    render: () => <Tab.Pane attached={false}> <GraficoLine /> </Tab.Pane>,
   },
   {
-    menuItem: 'Tab 2',
-    render: () => <Tab.Pane attached={false}> <GraficoLine/> </Tab.Pane>,
+    menuItem: 'Productos por mes',
+    render: () => <Tab.Pane attached={false}> <GraficoBar /> </Tab.Pane>,
   },
   {
-    menuItem: 'Tab 3',
-    render: () => <Tab.Pane attached={false}> <GraficoPie/> </Tab.Pane>,
+
+    menuItem: 'Productos Historicos',
+    render: () => <Tab.Pane attached={false}> <GraficoPie /> </Tab.Pane>,
   },
 ]
 

@@ -1,12 +1,5 @@
 export default {
-    keys: [
-        'hot dog',
-        'burger',
-        'sandwich',
-        'kebab',
-        'fries',
-        'donut'
-    ],
+
     margin: {
         top: 50,
         right: 130,
@@ -28,30 +21,11 @@ export default {
             type: 'patternLines',
             background: 'inherit',
             color: '#eed312',
-            rotation: -45,
-            lineWidth: 6,
-            spacing: 10
-        }
-    ],
-    fill: [
-        {
-            match: {
-                id: 'fries'
-            },
-            id: 'dots'
-        },
-        {
-            match: {
-                id: 'sandwich'
-            },
-            id: 'lines'
+
         }
     ],
     axisBottom: {
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'food',
+        legend: 'Productos',
         legendPosition: 'middle',
         legendOffset: -40
     },
@@ -59,7 +33,7 @@ export default {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'food',
+        legend: 'Cantidad',
         legendPosition: 'middle',
         legendOffset: -40
     },

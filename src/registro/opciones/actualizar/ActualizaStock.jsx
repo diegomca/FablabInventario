@@ -13,8 +13,6 @@ function ActualizarStock() {
     const [isShowingModal, setIsShowingModal] = useState(true);
     const [isClose, setIsclose] = useState(false);
     const [descripcion, setDescripcion] = useState("");
-    const [file, setFile] = useState('');
-    const [nameFile, setNameFile] = useState('');
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
 
     useEffect(() => {
@@ -31,12 +29,7 @@ function ActualizarStock() {
 
 
 
-    const fileInputRef = React.createRef();
 
-    const getFile = e => {
-        setFile(e.target.files[0])
-        setNameFile(e.target.files[0].name)
-    }
     const confirmarPedido = (evt) => {
 
         if (productSelect.length > 0) {
@@ -58,7 +51,9 @@ function ActualizarStock() {
             productSelect.map((wea) => {
                 lista.push({marca: wea.marca , modelo: wea.modelo,cantidad: wea.cantidad,stock: wea.stock})
             })
-            let temp_subir = { encargado: "Administrador", peticion: "Actualizar stock", archivo: "archivo.qlio", lista: lista, fecha: Date.now(), comentario: descripcion }
+            var fecha_date = new Date();
+            var ano = fecha_date.getFullYear();
+            let temp_subir = { encargado: "Administrador", peticion: "Actualizar stock", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
 
             setRegistro(temp_subir, (resp) => {
                 if (resp) {
@@ -147,11 +142,7 @@ function ActualizarStock() {
                             }
                         </Grid.Column>
 
-                        <Grid.Column width={1}>
-                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
-                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
-                            {nameFile}
-                        </Grid.Column>
+
 
                     </Grid>
 
