@@ -286,7 +286,7 @@ export const getRegistrosMensual = (callback, termino) => {
 
 export const setArchivo = (archivo, nombre, callback, porcentaje, termino) => {
 
-    var ruta_nombre = nombre + "-" + Date.now()
+    var ruta_nombre = Date.now() + "-" + nombre 
     firebaseConf.storage().ref('registros/resoluciones/' + ruta_nombre).put(archivo).on('state_changed', (snapshot) => {
         var temp = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         porcentaje(temp)
