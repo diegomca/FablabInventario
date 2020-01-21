@@ -275,6 +275,13 @@ function Home() {
                             <br></br>
                             <br></br>
                         </Segment>
+                        <Segment placeholder>
+                            <Header icon>
+                                <Icon name='book' />
+                                Manual de uso
+                            </Header>
+                            <Button href="/manual" primary>Ver</Button>
+                        </Segment>
                     </div>
                 </Container>
             </Fragment>

@@ -148,7 +148,7 @@ function EliminarProducto() {
                                 </Modal >
                                 :
                                 <div style={{ textAlign: "center" }} >
-                                    <Modal trigger={<Button circular color="blue" attached='left'>Ver articulos actualizados</Button>} >
+                                    <Modal trigger={<Button circular color="blue" attached='left'>Ver articulos</Button>} >
                                         <Modal.Header>Elementos Seleccionados</Modal.Header>
                                         <Modal.Content scrolling>
                                             <Modal.Description>
