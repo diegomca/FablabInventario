@@ -286,7 +286,8 @@ export const getRegistrosMensual = (callback, termino) => {
 
 export const setArchivo = (archivo, nombre, callback, porcentaje, termino) => {
 
-    firebaseConf.storage().ref('registros/resoluciones/' + nombre).put(archivo).on('state_changed', (snapshot) => {
+    var ruta_nombre = nombre + "-" + Date.now()
+    firebaseConf.storage().ref('registros/resoluciones/' + ruta_nombre).put(archivo).on('state_changed', (snapshot) => {
         var temp = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         porcentaje(temp)
     }, (error) => {
@@ -294,7 +295,7 @@ export const setArchivo = (archivo, nombre, callback, porcentaje, termino) => {
         alert("Error al subir los datos " + error)
         termino(false)
     }, () => {
-            firebaseConf.storage().ref('registros/resoluciones').child(nombre).getDownloadURL().then( url => {
+            firebaseConf.storage().ref('registros/resoluciones').child(ruta_nombre).getDownloadURL().then( url => {
                 callback(String(url))
                 termino(true)
             })
