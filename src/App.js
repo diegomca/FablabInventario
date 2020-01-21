@@ -9,6 +9,7 @@ import Graficos from './graficos/Grafico.jsx'
 import PrivateRoute from './componentes/PrivateRoute.jsx'
 import SelectRoute from './componentes/SelectRoute.jsx'
 import notfound from './404/notfound.js.jsx';
+import subir_file from './404/subir_file.jsx';
 function App() {
 
   return (
@@ -18,7 +19,8 @@ function App() {
         <Switch>
           <PrivateRoute path="/registro" exact component={Registro} />
           <PrivateRoute path="/home" exact component={Home} />
-          <PrivateRoute path="/graficos" exact component={Graficos} />
+        <PrivateRoute path="/graficos" exact component={Graficos} />
+        <PrivateRoute path="/fileupload" exact component={subir_file} />
           <PrivateRoute path="/productos" exact component={Productos} />
           <PrivateRoute path="/" exact component={Home} />
           <SelectRoute path="/login" exact component={Login} />

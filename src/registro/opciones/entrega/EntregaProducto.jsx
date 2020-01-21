@@ -1,10 +1,27 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon, Image } from 'semantic-ui-react';
+import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon, Image, Progress, Dimmer, Loader } from 'semantic-ui-react';
 import Productselect from './ProductSelect'
 import { UserContext } from "../UseContext";
-import { getListaProducto, setRegistro, updateProducto, updateHistorica, setDatosGrafico } from '../../../firebase';
+import { getListaProducto, setRegistro, updateProducto, updateHistorica, setDatosGrafico, setArchivo } from '../../../firebase';
 
 function EntregaProducto() {
+
+    const [subiendoBandera, setsubiendoBandera] = useState(false)
+
+
+    const [file, setFile] = useState(null);
+    const [nameFile, setNameFile] = useState(null);
+    const [progreso, setProgreso] = useState(null)
+
+    var url_subir = null;
+
+
+    const getFile = e => {
+        setFile(e.target.files[0])
+        setNameFile(e.target.files[0].name)
+    }
+
+    const fileInputRef = React.createRef();
 
     const [productSelect, setProductSelect] = useState([]);
     const [productos, setProductos] = useState([])
@@ -16,17 +33,17 @@ function EntregaProducto() {
     const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
 
 
-        useEffect(() => {
-            (async function () {
-                try {
-                    getListaProducto((response) => {
-                        setProductos(response);
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-            })();// eslint-disable-next-line
-        }, []);
+    useEffect(() => {
+        (async function () {
+            try {
+                getListaProducto((response) => {
+                    setProductos(response);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        })();// eslint-disable-next-line
+    }, []);
 
 
     const confirmarPedido = (evt) => {
@@ -38,33 +55,67 @@ function EntregaProducto() {
     }
     const handleSubmit = (evt) => {
         if (encargado !== "" && productSelect.length >= 1) {
-            var temp_lista =""
-            productSelect.map((productos) => {
-                temp_lista = temp_lista + `Marca: ${productos.marca} Modelo: ${productos.modelo} Cantidad: ${productos.cantidad}` + <br></br>;
-                let disponible = Number(productos.stock) - Number(productos.cantidad);
-                updateProducto( productos.ruta, disponible)
-                updateHistorica(productos.ruta, Number(productos.cantidad))
-                var temp_var = new Date() 
-                setDatosGrafico(productos.marca, productos.modelo, Number(productos.cantidad), temp_var.getFullYear(), temp_var.getMonth())
-            })
+            setsubiendoBandera(true)
+            if (file !== null) {
+                setArchivo(file, nameFile, (resp) => {
+                    url_subir = resp
+                }, (porcentaje) => {
+                    setProgreso(porcentaje)
+                }, bandera => {
+                    if (bandera) {
+                        var temp_lista = ""
+                        productSelect.map((productos) => {
+                            temp_lista = temp_lista + `Marca: ${productos.marca} Modelo: ${productos.modelo} Cantidad: ${productos.cantidad}` + <br></br>;
+                            let disponible = Number(productos.stock) - Number(productos.cantidad);
+                            updateProducto(productos.ruta, disponible)
+                            updateHistorica(productos.ruta, Number(productos.cantidad))
+                            var temp_var = new Date()
+                            setDatosGrafico(productos.marca, productos.modelo, Number(productos.cantidad), temp_var.getFullYear(), temp_var.getMonth())
+                        })
 
-            var lista = [];
-            productSelect.map((wea) => {
-                lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
-            })
-            var fecha_date = new Date();
-            var ano = fecha_date.getFullYear();
-            let temp_subir = { encargado: encargado, peticion: "Entrega de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
+                        var lista = [];
+                        productSelect.map((wea) => {
+                            lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+                        })
+                        var fecha_date = new Date();
+                        var ano = fecha_date.getFullYear();
+                        let temp_subir = { encargado: encargado, peticion: "Entrega de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
+                        setRegistro(temp_subir, (resp) => {
+                            if (resp) {
+                                window.location = '/registro'
+                            }
+                        })
+                    }
+                })
+            } else {
+                var temp_lista = ""
+                productSelect.map((productos) => {
+                    temp_lista = temp_lista + `Marca: ${productos.marca} Modelo: ${productos.modelo} Cantidad: ${productos.cantidad}` + <br></br>;
+                    let disponible = Number(productos.stock) - Number(productos.cantidad);
+                    updateProducto(productos.ruta, disponible)
+                    updateHistorica(productos.ruta, Number(productos.cantidad))
+                    var temp_var = new Date()
+                    setDatosGrafico(productos.marca, productos.modelo, Number(productos.cantidad), temp_var.getFullYear(), temp_var.getMonth())
+                })
+
+                var lista = [];
+                productSelect.map((wea) => {
+                    lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+                })
+                var fecha_date = new Date();
+                var ano = fecha_date.getFullYear();
+                let temp_subir = { encargado: encargado, peticion: "Entrega de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
                 setRegistro(temp_subir, (resp) => {
                     if (resp) {
                         window.location = '/registro'
                     }
                 })
-        }else{
+            }
+        } else {
             alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
         }
     }
-    
+
     return (
         <UserContext.Provider value={providerValue}>
             <Card fluid>
@@ -146,14 +197,31 @@ function EntregaProducto() {
                         <Grid.Column>
                             <Input fluid name="encargado" placeholder="Encargado" onChange={e => setEncargado(e.target.value)} />
                         </Grid.Column>
+                        <Grid.Column width={1}>
+                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
+                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
+                        </Grid.Column>
+                        {
+                            progreso !== null &&
+                            <Grid.Column width={4} >
+                                <Progress percent={progreso} indicating size="medium" />
+                            </Grid.Column>
+                        }
                     </Grid>
                 </Card.Content>
                 <Form>
                     <Card.Content extra>
                         <TextArea name="detalle" placeholder='Detalle' onChange={e => setDescripcion(e.target.value)} />
-                        <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
-                            Agregar
+                        {
+                            !subiendoBandera ?
+                                <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
+                                    Agregar
                         </Button>
+                                :
+                                <Dimmer active inverted>
+                                    <Loader />
+                                </Dimmer>
+                        }
                     </Card.Content>
                 </Form>
             </Card>

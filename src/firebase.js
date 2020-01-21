@@ -14,7 +14,8 @@ const config = {
 }
 
 const firebaseConf = firebase.initializeApp(config);
-export default firebaseConf;
+export default { firebaseConf };
+
 
 
 export const getListaProducto = (callback) => {
@@ -163,17 +164,17 @@ export const setDatosGrafico = (marca, modelo, cantidad, año, mes) => {
     let temp_subir = { marca: marca, modelo: modelo, cantidad: cantidad, año: año, mes: mes }
     var bandera = false;
     firebaseConf.database().ref().child("datos-grafico").child("entrega").orderByChild('modelo')
-    .equalTo(modelo).once('value', function (snapshot) {
-            snapshot.forEach(data =>{
-               if (data.val().año === año && data.val().mes === mes && data.val().marca === marca) {
-                   let nueva_cantidad = data.val().cantidad + cantidad
-                   bandera = true;
-                   firebaseConf.database().ref().child("datos-grafico").child("entrega").child(data.key).update({
-                       "cantidad": nueva_cantidad
-                   })
+        .equalTo(modelo).once('value', function (snapshot) {
+            snapshot.forEach(data => {
+                if (data.val().año === año && data.val().mes === mes && data.val().marca === marca) {
+                    let nueva_cantidad = data.val().cantidad + cantidad
+                    bandera = true;
+                    firebaseConf.database().ref().child("datos-grafico").child("entrega").child(data.key).update({
+                        "cantidad": nueva_cantidad
+                    })
                 }
             })
-        }).finally(() =>{
+        }).finally(() => {
             if (!bandera) {
                 firebaseConf.database().ref().child('datos-grafico').child('entrega').push(temp_subir)
             }
@@ -191,18 +192,18 @@ export const getDatosHistoricosProductos = (callback) => {
         })
 }
 
-export const getDatosGraficosBarra = (año, mes, callbackdatos ) => {
+export const getDatosGraficosBarra = (año, mes, callbackdatos) => {
     var temp_datos = []
     var datos_enviar = []
     var key = []
 
-    firebaseConf.database().ref().child("datos-grafico").child("entrega").orderByChild('cantidad').once('value', function(snapshot){
-        snapshot.forEach((dato) =>{
+    firebaseConf.database().ref().child("datos-grafico").child("entrega").orderByChild('cantidad').once('value', function (snapshot) {
+        snapshot.forEach((dato) => {
             if (dato.val().año === año && dato.val().mes === mes) {
                 temp_datos.push(dato.val())
             }
         })
-    }).finally(()=>{
+    }).finally(() => {
         temp_datos.reverse().forEach(datos => {
             if (datos_enviar.length < 10) {
                 datos_enviar.push({ id: datos.marca + " - " + datos.modelo, label: datos.marca + "  " + datos.modelo, value: datos.cantidad })
@@ -238,7 +239,7 @@ export const getTipoRegistroHome = (callback, termino) => {
 }
 
 export const getEntregasMes = (callback, termino) => {
-    var cont  = 0
+    var cont = 0
     var date = new Date();
     let año = date.getFullYear(); let mes = date.getMonth();
 
@@ -248,7 +249,7 @@ export const getEntregasMes = (callback, termino) => {
                 cont = cont + dato.val().cantidad;
             }
         })
-    }).finally(()=> {
+    }).finally(() => {
         callback(cont);
         termino(true)
     })
@@ -274,11 +275,30 @@ export const getRegistrosMensual = (callback, termino) => {
 
     var cont = 0;
     var date = new Date();
-    firebaseConf.firestore().collection('registros').where("año", "==", date.getFullYear()).where("mes","==",date.getMonth())
+    firebaseConf.firestore().collection('registros').where("año", "==", date.getFullYear()).where("mes", "==", date.getMonth())
         .get().then(function (snapshot) {
             cont = snapshot.size;
         }).finally(() => {
             callback(cont);
             termino(true)
         });
+}
+
+export const setArchivo = (archivo, nombre, callback, porcentaje, termino) => {
+
+    firebaseConf.storage().ref('registros/resoluciones/' + nombre).put(archivo).on('state_changed', (snapshot) => {
+        var temp = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        porcentaje(temp)
+    }, (error) => {
+        console.log("error " + error)
+        alert("Error al subir los datos " + error)
+        termino(false)
+    }, () => {
+            firebaseConf.storage().ref('registros/resoluciones').child(nombre).getDownloadURL().then( url => {
+                callback(String(url))
+                termino(true)
+            })
+        
+    })
+
 }

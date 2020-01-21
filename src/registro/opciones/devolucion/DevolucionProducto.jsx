@@ -1,10 +1,30 @@
-import React, { useState, useMemo, useEffect} from 'react';
-import { Button, Form, Grid, Input, TextArea, Card,Modal, Header,Table, Icon } from 'semantic-ui-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Button, Form, Grid, Input, TextArea, Card, Modal, Header, Table, Icon, Progress, Dimmer, Loader } from 'semantic-ui-react';
 import Productselect from './ListaProductoDevolucion'
 import { UserContext } from '../UseContext';
-import { getListaProducto, updateProducto, setRegistro } from '../../../firebase';
+import { getListaProducto, updateProducto, setRegistro, setArchivo } from '../../../firebase';
 
 function DevolucionProducto() {
+
+    const [subiendoBandera, setsubiendoBandera] = useState(false)
+
+
+    const [file, setFile] = useState(null);
+    const [nameFile, setNameFile] = useState(null);
+    const [progreso, setProgreso] = useState(null)
+
+    var url_subir = null;
+
+
+
+    const getFile = e => {
+        setFile(e.target.files[0])
+        setNameFile(e.target.files[0].name)
+    }
+
+    const fileInputRef = React.createRef();
+
+
     const [productSelect, setProductSelect] = useState([]);
 
     const [productos, setProductos] = useState([])
@@ -12,7 +32,7 @@ function DevolucionProducto() {
     const [isClose, setIsclose] = useState(false);
     const [encargado, setEncargado] = useState("");
     const [descripcion, setDescripcion] = useState("");
-    const providerValue = useMemo(() => ({ productSelect, setProductSelect}), [productSelect, setProductSelect]);
+    const providerValue = useMemo(() => ({ productSelect, setProductSelect }), [productSelect, setProductSelect]);
 
     useEffect(() => {
         (async function () {
@@ -29,25 +49,57 @@ function DevolucionProducto() {
 
     const handleSubmit = (evt) => {
         if (encargado !== "" && productSelect.length >= 1) {
-            productSelect.map((productos) => {
-                let disponible = Number(productos.disponible) + Number(productos.cantidad);
-                console.log(disponible)
-                console.log(productos.ruta)
-                updateProducto(productos.ruta, disponible)
-            })
-            var lista = []
-            productSelect.map((wea) => {
-                lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
-            })
-            var fecha_date = new Date();
-            var ano = fecha_date.getFullYear();
-            let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
-            
-            setRegistro(temp_subir, (resp) => {
-                if (resp) {
-                    window.location = '/registro'
-                }
-            })
+            setsubiendoBandera(true)
+            if (file !== null) {
+                setArchivo(file, nameFile, (resp) => {
+                    url_subir = resp
+                }, (porcentaje) => {
+                    setProgreso(porcentaje)
+                }, bandera => {
+                    if (bandera) {
+                        productSelect.map((productos) => {
+                            let disponible = Number(productos.disponible) + Number(productos.cantidad);
+                            console.log(disponible)
+                            console.log(productos.ruta)
+                            updateProducto(productos.ruta, disponible)
+                        })
+                        var lista = []
+                        productSelect.map((wea) => {
+                            lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+                        })
+                        var fecha_date = new Date();
+                        var ano = fecha_date.getFullYear();
+                        let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
+
+                        setRegistro(temp_subir, (resp) => {
+                            if (resp) {
+                                window.location = '/registro'
+                            }
+                        })
+                    }
+                })
+
+            }else{
+                productSelect.map((productos) => {
+                    let disponible = Number(productos.disponible) + Number(productos.cantidad);
+                    console.log(disponible)
+                    console.log(productos.ruta)
+                    updateProducto(productos.ruta, disponible)
+                })
+                var lista = []
+                productSelect.map((wea) => {
+                    lista.push({ marca: wea.marca, modelo: wea.modelo, cantidad: wea.cantidad })
+                })
+                var fecha_date = new Date();
+                var ano = fecha_date.getFullYear();
+                let temp_subir = { encargado: encargado, peticion: "Devolucion de producto", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
+
+                setRegistro(temp_subir, (resp) => {
+                    if (resp) {
+                        window.location = '/registro'
+                    }
+                })
+            }
         } else {
             alert(`Error en los datos, todos los datos son obligatorios y debe seleccionar productos obligatoriamente`)
         }
@@ -55,7 +107,7 @@ function DevolucionProducto() {
     }
     const confirmarPedido = (evt) => {
 
-        if ( productSelect.length > 0  ) {
+        if (productSelect.length > 0) {
             setIsShowingModal(!isShowingModal);
             setIsclose(!isClose);
         }
@@ -63,17 +115,17 @@ function DevolucionProducto() {
 
     return (
         <UserContext.Provider value={providerValue}>
-        <Card fluid>
-            <Card.Content>
-                <Grid columns="equal">
-                    <Grid.Column>
-                        { isShowingModal ?
-                            < Modal open={isClose} trigger={< Button onClick={e => setIsclose(!isClose)} fluid color="youtube" > Lista de Productos</Button >} size="small" >
-                                <Modal.Header>Devolucion Producto</Modal.Header>
-                                <Modal.Content >
-                                    <Modal.Description>
-                                        <Form>
-                                            <Header>Lista de Productos</Header>
+            <Card fluid>
+                <Card.Content>
+                    <Grid columns="equal">
+                        <Grid.Column>
+                            {isShowingModal ?
+                                < Modal open={isClose} trigger={< Button onClick={e => setIsclose(!isClose)} fluid color="youtube" > Lista de Productos</Button >} size="small" >
+                                    <Modal.Header>Devolucion Producto</Modal.Header>
+                                    <Modal.Content >
+                                        <Modal.Description>
+                                            <Form>
+                                                <Header>Lista de Productos</Header>
                                                 <Table celled>
                                                     <Table.Header>
                                                         <Table.Row>
@@ -97,16 +149,16 @@ function DevolucionProducto() {
                                                     </Table.Body>
                                                 </Table>
                                                 {productSelect.length > 0 ? <Button className="close" onClick={e => confirmarPedido()} color="vk" circular type="submit" >
-                                                    Confirmar <Icon name='chevron right' /></Button> : <div/> }
-                                                <Button className="close" onClick={e => {setIsclose(!isClose); setProductSelect([])}} color="red" circular type="submit" >
+                                                    Confirmar <Icon name='chevron right' /></Button> : <div />}
+                                                <Button className="close" onClick={e => { setIsclose(!isClose); setProductSelect([]) }} color="red" circular type="submit" >
                                                     Salir </Button>
-                                        </Form>
-                                    </Modal.Description>
-                                </Modal.Content>
-                            </Modal >
-                        : 
-                        <div style={{textAlign:"center"}} >
-                        
+                                            </Form>
+                                        </Modal.Description>
+                                    </Modal.Content>
+                                </Modal >
+                                :
+                                <div style={{ textAlign: "center" }} >
+
                                     <Modal trigger={<Button circular color="blue" attached='left'>Ver Articulos</Button>} >
                                         <Modal.Header>Elementos seleccionados para devolver</Modal.Header>
                                         <Modal.Content scrolling>
@@ -121,42 +173,58 @@ function DevolucionProducto() {
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
-                                                {productSelect.map((item, index) => {
-                                                    const { marca, modelo, stock, cantidad } = item
-                                                    return (
-                                                        <Table.Row>
-                                                            <Table.Cell>{marca}</Table.Cell>
-                                                            <Table.Cell>{modelo}</Table.Cell>
-                                                            <Table.Cell textAlign='center' >{stock}</Table.Cell>
-                                                            <Table.Cell textAlign='center' >{cantidad}</Table.Cell>
-                                                        </Table.Row>
-                                                    )
-                                                })
-                                                }
-                                                 </Table.Body>
+                                                        {productSelect.map((item, index) => {
+                                                            const { marca, modelo, stock, cantidad } = item
+                                                            return (
+                                                                <Table.Row>
+                                                                    <Table.Cell>{marca}</Table.Cell>
+                                                                    <Table.Cell>{modelo}</Table.Cell>
+                                                                    <Table.Cell textAlign='center' >{stock}</Table.Cell>
+                                                                    <Table.Cell textAlign='center' >{cantidad}</Table.Cell>
+                                                                </Table.Row>
+                                                            )
+                                                        })
+                                                        }
+                                                    </Table.Body>
                                                 </Table>
-                                        </Modal.Description>
+                                            </Modal.Description>
                                         </Modal.Content>
                                     </Modal>
-                            <Button onClick={ e => {setIsShowingModal(!isShowingModal); setProductSelect([]); }}  color="red" circular attached='right'>Eliminar Articulos</Button>
-                        </div>
-                    }
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Input fluid name="encargado" placeholder="Encargado de Devolucion" onChange={e => setEncargado(e.target.value)} />
-                    </Grid.Column>
-
-                </Grid>
-            </Card.Content>
-            <Form>
-                <Card.Content extra>
-                    <TextArea name="detalle" placeholder='Detalle de la Devolucion' onChange={e => setDescripcion(e.target.value)} />
-                    <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
-                        Agregar
-                        </Button>
+                                    <Button onClick={e => { setIsShowingModal(!isShowingModal); setProductSelect([]); }} color="red" circular attached='right'>Eliminar Articulos</Button>
+                                </div>
+                            }
+                        </Grid.Column>
+                        <Grid.Column>
+                            <Input fluid name="encargado" placeholder="Encargado de Devolucion" onChange={e => setEncargado(e.target.value)} />
+                        </Grid.Column>
+                        <Grid.Column width={1}>
+                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
+                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
+                        </Grid.Column>
+                        {
+                            progreso !== null &&
+                            <Grid.Column width={4} >
+                                <Progress percent={progreso} indicating size="medium" />
+                            </Grid.Column>
+                        }
+                    </Grid>
                 </Card.Content>
-            </Form>
-        </Card>
+                <Form>
+                    <Card.Content extra>
+                        <TextArea name="detalle" placeholder='Detalle de la Devolucion' onChange={e => setDescripcion(e.target.value)} />
+                        {
+                            !subiendoBandera ?
+                                <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
+                                    Agregar
+                        </Button>
+                                :
+                                <Dimmer active inverted>
+                                    <Loader />
+                                </Dimmer>
+                        }
+                    </Card.Content>
+                </Form>
+            </Card>
         </UserContext.Provider>
     );
 }

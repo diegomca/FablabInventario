@@ -1,10 +1,27 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Button, Form, Grid, TextArea, Card, Table, Modal, Header, Icon } from 'semantic-ui-react';
+import { Button, Form, Grid, TextArea, Card, Table, Modal, Header, Icon, Progress, Dimmer, Loader } from 'semantic-ui-react';
 import Productselect from './ProductoEliminar'
 import { UserContext } from "../UseContext";
-import { getListaProducto, removeProducto, setRegistro } from '../../../firebase';
+import { getListaProducto, removeProducto, setRegistro, setArchivo } from '../../../firebase';
 
 function EliminarProducto() {
+
+    const [subiendoBandera, setsubiendoBandera] = useState(false)
+
+
+    const [file, setFile] = useState(null);
+    const [nameFile, setNameFile] = useState(null);
+    const [progreso, setProgreso] = useState(null)
+
+    var url_subir = null;
+
+
+    const getFile = e => {
+        setFile(e.target.files[0])
+        setNameFile(e.target.files[0].name)
+    }
+
+    const fileInputRef = React.createRef();
 
     const [productSelect, setProductSelect] = useState([]);
     const [productos, setProductos] = useState([])
@@ -37,23 +54,53 @@ function EliminarProducto() {
     const handleSubmit = (evt) => {
 
         if (productSelect.length > 0) {
-            productSelect.map((productos) => {
-                console.log(productos.ruta)
-                removeProducto(productos.ruta)
-            })
-            var lista = [];
-            productSelect.map((wea) => {
-                lista.push({ marca: wea.marca, modelo: wea.modelo, stock: wea.stock })
-            })
+            setsubiendoBandera(true)
+            if (file !== null) {
+                setArchivo(file, nameFile, (resp) => {
+                    url_subir = resp
+                }, (porcentaje) => {
+                    setProgreso(porcentaje)
+                }, bandera => {
+                    if (bandera) {
+                        productSelect.map((productos) => {
+                            console.log(productos.ruta)
+                            removeProducto(productos.ruta)
+                        })
+                        var lista = [];
+                        productSelect.map((wea) => {
+                            lista.push({ marca: wea.marca, modelo: wea.modelo, stock: wea.stock })
+                        })
 
-            var fecha_date = new Date();
-            var ano = fecha_date.getFullYear();
-            let temp_subir = { encargado: "Administrador", peticion: "Producto removido", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth() }
-            setRegistro(temp_subir, (resp) => {
-                if (resp) {
-                    window.location = '/registro'
-                }
-            })
+                        var fecha_date = new Date();
+                        var ano = fecha_date.getFullYear();
+                        let temp_subir = { encargado: "Administrador", peticion: "Producto removido", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
+                        setRegistro(temp_subir, (resp) => {
+                            if (resp) {
+                                window.location = '/registro'
+                            }
+                        })
+                    }
+                })
+                
+            }else{
+                productSelect.map((productos) => {
+                    console.log(productos.ruta)
+                    removeProducto(productos.ruta)
+                })
+                var lista = [];
+                productSelect.map((wea) => {
+                    lista.push({ marca: wea.marca, modelo: wea.modelo, stock: wea.stock })
+                })
+
+                var fecha_date = new Date();
+                var ano = fecha_date.getFullYear();
+                        let temp_subir = { encargado: "Administrador", peticion: "Producto removido", lista: lista, fecha: Date.now(), comentario: descripcion, año: ano, mes: fecha_date.getMonth(), ruta_img: url_subir }
+                setRegistro(temp_subir, (resp) => {
+                    if (resp) {
+                        window.location = '/registro'
+                    }
+                })
+            }
         } else {
             console.log("error")
         }
@@ -134,16 +181,32 @@ function EliminarProducto() {
                                 </div>
                             }
                         </Grid.Column>
-
+                        <Grid.Column width={1}>
+                            <Button icon="upload" onClick={() => fileInputRef.current.click()} />
+                            <input ref={fileInputRef} type="file" hidden onChange={getFile} />
+                        </Grid.Column>
+                        {
+                            progreso !== null &&
+                            <Grid.Column width={4} >
+                                <Progress percent={progreso} indicating size="medium" />
+                            </Grid.Column>
+                        }
                     </Grid>
 
                 </Card.Content>
                 <Form>
                     <Card.Content extra>
                         <TextArea name="detalle" placeholder='Detalle de la Devolucion' onChange={e => setDescripcion(e.target.value)} />
-                        <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
-                            Agregar
+                        {
+                            !subiendoBandera ?
+                                <Button color="facebook" type="submit" size="medium" onClick={handleSubmit} >
+                                    Agregar
                         </Button>
+                                :
+                                <Dimmer active inverted>
+                                    <Loader />
+                                </Dimmer>
+                        }
                     </Card.Content>
                 </Form>
             </Card>

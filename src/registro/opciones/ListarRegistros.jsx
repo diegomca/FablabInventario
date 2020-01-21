@@ -1,5 +1,6 @@
 import React from 'react'
 import { Item, Label, Header, Segment, Grid, Button, Modal, Table } from 'semantic-ui-react'
+import AbrirIMG from '../AbrirIMG';
 
 
 function ListarRegistros({ registros }) {
@@ -16,7 +17,7 @@ function ListarRegistros({ registros }) {
     }
 
     return registros.map((registro, index) => {
-        const { peticion, encargado, fecha, comentario, lista } = registro
+        const { peticion, encargado, fecha, comentario, lista, ruta_img } = registro
         let fechastr = getFecha(fecha);
 
         return (
@@ -47,8 +48,8 @@ function ListarRegistros({ registros }) {
                                             <Table singleLine>
                                                 <Table.Header>
                                                     <Table.Row>
-                                                        <Table.HeaderCell  textAlign='center'>Marca</Table.HeaderCell>
-                                                        <Table.HeaderCell  textAlign='center'>Modelo</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Marca</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Modelo</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad Pedida</Table.HeaderCell>
                                                     </Table.Row>
                                                 </Table.Header>
@@ -78,8 +79,8 @@ function ListarRegistros({ registros }) {
                                             <Table singleLine>
                                                 <Table.Header>
                                                     <Table.Row>
-                                                        <Table.HeaderCell  textAlign='center'>Marca</Table.HeaderCell>
-                                                        <Table.HeaderCell  textAlign='center'>Modelo</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Marca</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Modelo</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad devuelta</Table.HeaderCell>
                                                     </Table.Row>
                                                 </Table.Header>
@@ -109,8 +110,8 @@ function ListarRegistros({ registros }) {
                                             <Table singleLine>
                                                 <Table.Header>
                                                     <Table.Row>
-                                                        <Table.HeaderCell  textAlign='center'>Marca</Table.HeaderCell>
-                                                        <Table.HeaderCell  textAlign='center'>Modelo</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Marca</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Modelo</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad Agregada</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad Previa</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad Nueva</Table.HeaderCell>
@@ -125,7 +126,7 @@ function ListarRegistros({ registros }) {
                                                                 <Table.Cell textAlign='center'>{modelo}</Table.Cell>
                                                                 <Table.Cell textAlign='center' >{cantidad}</Table.Cell>
                                                                 <Table.Cell textAlign='center' >{stock}</Table.Cell>
-                                                                <Table.Cell textAlign='center' >{Number(stock)+Number(cantidad)}</Table.Cell>
+                                                                <Table.Cell textAlign='center' >{Number(stock) + Number(cantidad)}</Table.Cell>
                                                             </Table.Row>
                                                         )
                                                     })
@@ -144,8 +145,8 @@ function ListarRegistros({ registros }) {
                                             <Table singleLine>
                                                 <Table.Header>
                                                     <Table.Row>
-                                                        <Table.HeaderCell  textAlign='center'>Marca</Table.HeaderCell>
-                                                        <Table.HeaderCell  textAlign='center'>Modelo</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Marca</Table.HeaderCell>
+                                                        <Table.HeaderCell textAlign='center'>Modelo</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad Total</Table.HeaderCell>
 
                                                     </Table.Row>
@@ -158,7 +159,7 @@ function ListarRegistros({ registros }) {
                                                                 <Table.Cell textAlign='center'>{marca}</Table.Cell>
                                                                 <Table.Cell textAlign='center'>{modelo}</Table.Cell>
                                                                 <Table.Cell textAlign='center' >{stock}</Table.Cell>
-                                                               
+
                                                             </Table.Row>
                                                         )
                                                     })
@@ -182,7 +183,7 @@ function ListarRegistros({ registros }) {
                                                         <Table.HeaderCell textAlign='center'>Marca</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Modelo</Table.HeaderCell>
                                                         <Table.HeaderCell textAlign='center'>Cantidad</Table.HeaderCell>
-                                                        <Table.HeaderCell textAlign='center'>Ubicación</Table.HeaderCell>                                                        
+                                                        <Table.HeaderCell textAlign='center'>Ubicación</Table.HeaderCell>
                                                     </Table.Row>
                                                 </Table.Header>
                                                 <Table.Body>
@@ -205,13 +206,17 @@ function ListarRegistros({ registros }) {
                                     </Modal.Content>
                                 </Modal>
                             }
-                            
-
                         </Grid.Column>
                     </Grid>
                     <Item.Description>
                         {comentario}
                     </Item.Description>
+                    {
+                        ruta_img !== null &&
+                        <Item.Extra>
+                            <AbrirIMG ruta={ruta_img}></AbrirIMG>
+                        </Item.Extra>
+                    }
                 </Item>
             </Segment>
         )
